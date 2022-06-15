@@ -1,0 +1,17 @@
+{
+  "name": "boilerplate-back",
+  "version": "1.0.0",
+  "description": "Hi there!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "express": "^4.18.1",
+    "sequelize": "^6.20.1"
+  }
+}
