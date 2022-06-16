@@ -1,1 +1,1 @@
-"Hola, abriguense que hace frio"
+"Hola, abriguense que hace frio amiguitxs"
