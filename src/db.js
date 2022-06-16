@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const {
   DB_USER, DB_PASSWORD, DB_HOST,
-} = process.env;
+} = process.env; 
 
 const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/proyectoFinal`, {
   logging: false, // set to console.log to see the raw SQL queries
@@ -12,7 +12,7 @@ const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}
 });
 const basename = path.basename(__filename);
 
-const modelDefiners = [];
+const modelDefiners = []; 
 
 // Leemos todos los archivos de la carpeta Models, los requerimos y agregamos al arreglo modelDefiners
 fs.readdirSync(path.join(__dirname, '/models'))
