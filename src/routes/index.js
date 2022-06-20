@@ -1,5 +1,4 @@
-const { Router } = require('express');
-const { Product } = require('../db');
+const { Router } = require("express");
 const router = Router();
 const axios = require('axios');
 const { Op } = require('sequelize');
@@ -84,6 +83,10 @@ router.post('/shoes', async (req, res) => {
   }
 })
 
+//--------------------------IMPORT
+const shoesRouter = require("./shoes");
 
+//--------------------------ROUTES
+router.use("/shoes", shoesRouter);
 
 module.exports = router;
