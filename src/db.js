@@ -6,7 +6,7 @@ const {
   DB_USER, DB_PASSWORD, DB_HOST,
 } = process.env;
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/proyectoFinal`, {
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/proyectofinal`, {
   logging: false,
   native: false,
 });
@@ -26,14 +26,13 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Categories, Customer, Order, Product } = sequelize.models;
+const { Category, Customer, Order, Product } = sequelize.models;
 
-Categories.hasMany(Product)
-Product.belongsTo(Categories)
+Category.belongsToMany(Product, { through: 'category_product' })
+Product.belongsToMany(Category, { through: 'category_product' })
 
-Customer.hasMany(Order)
-Order.belongsTo(Customer)
-
+Customer.belongsToMany(Order, { through: 'customer_order' })
+Order.belongsToMany(Customer, { through: 'customer_order' })
 
 module.exports = {
   ...sequelize.models,
