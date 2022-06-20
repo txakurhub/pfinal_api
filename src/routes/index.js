@@ -1,36 +1,41 @@
 const { Router } = require('express');
-// Importar todos los routers;
-// Ejemplo: const authRouter = require('./auth.js');
-// const getPepes = require('../../controllers/hola')
+
 const axios = require('axios');
+const { Product } = require('../db');
 const router = Router();
 
-// Configurar los routers
-// Ejemplo: router.use('/auth', authRouter);
+const getDb = async () => {
+
+  const foundDate = await Product.findAll()
+
+  return foundDate
+}
 
 router.get('/shoes', async (req, res) => {
-
-//--------------------------------------------------------------------------------------------
-const getShoes = async()=>{
-    const shoes=await axios.get(`https://api.mercadolibre.com/sites/MLA/search?q=calzado&offset=${page}&limit=5`)
-
-    const result ={
-        // PruebaLink:pepes.data.results.map(e=>e.seller.permalink),
-        // PruebaId:pepes.data.results.map(e=>e.seller.id)
-        title:shoes.data.results.map(e=>e.title),
-        img:shoes.data.results.map(e=>e.thumbnail),
-        brand:shoes.data.results.map(e=>e.attributes[0].value_name),
-        model:shoes.data.results.map(e=>e.attributes[2].value_name),
-        price:shoes.data.results.map(e=>e.price)
+  //--------------------------------------------------------------------------------------------
+  try {
+    const dbInfo = await getDb()
+    if (!dbInfo.length) {
+      const shoesApi = await axios(`https://api.mercadolibre.com/sites/MLA/search?q=zapatillas&offset=0`)
+      const result = shoesApi.data.results.map(s => {
+        return {
+          title: s.title,
+          image: s.thumbnail,
+          brand: s.attributes ? s.attributes[0].value_name : "Not found",
+          model: s.attributes ? s.attributes[2].value_name : "Not found",
+          price: s.price
+        }
+      })
+      const createdInfo = await Product.bulkCreate(result)
+      res.send(createdInfo)
+    } else {
+      res.status(200).json(dbInfo)
     }
-    return result
-}
-//----------------------------------------------------------------------------------------------
+  } catch (error) {
+    console.log(error)
+  }
+})
 
-    const page=req.query.page||0;
-    let shoes = await getShoes()
-    res.json(shoes)
-});
 
 
 
