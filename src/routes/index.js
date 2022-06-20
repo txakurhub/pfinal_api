@@ -16,7 +16,6 @@ router.get('/shoes', async (req, res) => {
       const shoesApi = await axios(`https://api.mercadolibre.com/sites/MLA/search?q=zapatillas&offset=0`)
       const result = shoesApi.data.results.map(s => {
         return {
-          id: s.id,
           title: s.title,
           image: s.thumbnail,
           brand: s.attributes ? s.attributes[0].value_name : "Not found",
