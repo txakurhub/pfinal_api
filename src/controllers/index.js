@@ -1,9 +1,13 @@
-const { Product } = require("../db");
-
+const { Product, Category } = require("../db");
 
 const getDb = async () => {
   const foundDate = await Product.findAll();
   return foundDate;
 };
 
-module.exports = getDb ;
+const getDbCategories = async () => {
+  const foundCategories = await Category.findAll();
+  return foundCategories;
+};
+
+module.exports = { getDb, getDbCategories };

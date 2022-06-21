@@ -3,15 +3,15 @@ const { Product } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
-const getDb = require("../controllers/index.js");
-
+const {getDb} = require("../controllers/index.js");
+// `https://api.mercadolibre.com/sites/MLA/search?q=zapatillas&offset=0`
 
 router.get("/", async (req, res) => {
   try {
     const dbInfo = await getDb();
     if (!dbInfo.length) {
       const shoesApi = await axios(
-        `https://api.mercadolibre.com/sites/MLA/search?q=zapatillas&offset=0`
+        `https://api.mercadolibre.com/sites/MLA/search?category=MLA109026`
       );
       const result = shoesApi.data.results.map((s) => {
         return {
@@ -43,7 +43,7 @@ router.get("/", async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    console.log(error + " ---------------error en shoes.js");
   }
 });
 
@@ -88,40 +88,40 @@ router.post("/", async (req, res) => {
 
 // update shoes (product)
 
-router.put("/:id",async (req,res)=>{
-  const {id} = req.params
-  const {title,image,brand,model,price} = req.body
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, image, brand, model, price } = req.body;
   try {
     // busco el producto
-    const product = await Product.findByPk(id)
+    const product = await Product.findByPk(id);
     //sino esta
-    if(!product) res.status(404).send("ID not found")
+    if (!product) res.status(404).send("ID not found");
     //si esta actualizo dependiendo los datos que me ingresan
-      product.title = title?title:product.title
-      product.image = image?image:product.image
-      product.brand = brand?brand:product.brand
-      product.model = model?model:product.model
-      product.price = price? price:product.price
-      await product.save() // guardamos los cambios
-      res.send("Update")
+    product.title = title ? title : product.title;
+    product.image = image ? image : product.image;
+    product.brand = brand ? brand : product.brand;
+    product.model = model ? model : product.model;
+    product.price = price ? price : product.price;
+    await product.save(); // guardamos los cambios
+    res.send("Update");
     //console.log(JSON.stringify(product))
   } catch (error) {
-    res.send({error:error.message})
+    res.send({ error: error.message });
   }
-})
+});
 
 //delete shoes (product)
-router.delete("/:id",async (req,res)=>{
-  const {id} = req.params;
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
     // elimino el producto
-    const removed = await Product.destroy({where:{id}})
+    const removed = await Product.destroy({ where: { id } });
     // si lo de arriba retorna 1 (Es porque lo elimino)
-    if(removed) return res.send("Removed product")
+    if (removed) return res.send("Removed product");
     // si lo de arriba retorna 0 (Es porque no lo elimino)
-    res.send("ID not found")
+    res.send("ID not found");
   } catch (error) {
-    res.json({error:error.message})
+    res.json({ error: error.message });
   }
-})
-module.exports = router
+});
+module.exports = router;
