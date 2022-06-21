@@ -5,7 +5,6 @@ const router = Router()
 const shoesRouter = require("./shoes");
 const customersRouter = require("./customer")
 //--------------------------ROUTES
-const router = Router();
 router.use("/shoes", shoesRouter);
 
 router.use("/customers", customersRouter);
