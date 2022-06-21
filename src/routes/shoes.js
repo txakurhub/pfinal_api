@@ -3,7 +3,7 @@ const { Product } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
-const { getDb } = require("../controllers/index.js");
+const getDb  = require("../controllers/index.js");
 
 
 router.get("/", async (req, res) => {
