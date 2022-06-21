@@ -27,6 +27,6 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT,
       },
     },
-    { timestamps: false }
-  );
+  }, { timestamps: false });
+
 };
