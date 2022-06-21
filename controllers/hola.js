@@ -1,1 +1,0 @@
-"Hola, abriguense que hace frio amiguitxs"
