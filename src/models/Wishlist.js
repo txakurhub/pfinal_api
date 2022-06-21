@@ -2,16 +2,14 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Category",
+    "wishlist",
     {
-      name: {
+      userId: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.TEXT,
       },
     },
-    { timestamps: false }
+    {
+      timestamps: false,
+    }
   );
 };
