@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
       );
       const result = shoesApi.data.results.map((s) => {
         return {
-          id: s.id,
+          // id: s.id,
           title: s.title,
           image: s.thumbnail,
           brand: s.attributes ? s.attributes[0].value_name : "Not found",
@@ -68,13 +68,12 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { id, title, image, brand, model, price, category } = req.body;
+    const { title, image, brand, model, price, category } = req.body;
     console.log(req.body)
-    if (!id || !title || !image || !brand || !model || !price || !category) {
+    if (!title || !image || !brand || !model || !price || !category) {
       res.status(404).send("Parameters incomplete");
     } else {
       const create = await Product.create({
-        id,
         title,
         image,
         brand,
