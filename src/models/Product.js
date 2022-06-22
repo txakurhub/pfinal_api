@@ -4,6 +4,12 @@ module.exports = (sequelize) => {
   sequelize.define(
     "Product",
     {
+      // id: {
+      //   type: DataTypes.UUID,
+      //   defaultValue: DataTypes.UUIDV4,
+      //   allowNull: false,
+      //   primaryKey: true,
+      // },
       id: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -14,7 +20,6 @@ module.exports = (sequelize) => {
       },
       image: {
         type: DataTypes.TEXT,
-        allowNull: false,
       },
       brand: {
         type: DataTypes.STRING,
