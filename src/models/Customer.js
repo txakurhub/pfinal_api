@@ -26,6 +26,5 @@ module.exports = (sequelize) => {
       default_shipping_address: {
         type: DataTypes.TEXT,
       },
-    }, { timestamps: false });
-
+    }, { timestamps: false })
 };

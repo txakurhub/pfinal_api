@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const dbInfo = await getDb();
     if (!dbInfo.length) {
       const shoesApi = await axios(
-        `https://api.mercadolibre.com/sites/MLA/search?category=MLA109026`
+        `https://api.mercadolibre.com/sites/MLA/search?category=MLA109026&offset=50`
       );
       const result = shoesApi.data.results.map((s) => {
         return {
