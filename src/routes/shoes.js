@@ -1,10 +1,9 @@
 const { Router } = require("express");
-const { Product } = require("../db");
+const { Product, Category } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
-const {getDb} = require("../controllers/index.js");
-// `https://api.mercadolibre.com/sites/MLA/search?q=zapatillas&offset=0`
+const { getDb } = require("../controllers/index.js");
 
 router.get("/", async (req, res) => {
   try {
@@ -51,7 +50,11 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     if (id) {
-      const foundProduct = await Product.findByPk(id);
+      const foundProduct = await Product.findByPk(id, {
+        include: {
+          model: Category
+        }
+      });
       if (foundProduct) {
         res.status(200).send(foundProduct);
       } else {
@@ -65,28 +68,34 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { title, image, brand, model, price } = req.query;
-    if (!title || !image || !brand || !model || !price) {
+    const { id, title, image, brand, model, price, category } = req.body;
+    console.log(req.body)
+    if (!id || !title || !image || !brand || !model || !price || !category) {
       res.status(404).send("Parameters incomplete");
     } else {
       const create = await Product.create({
-        where: {
-          title,
-          image,
-          brand,
-          model,
-          price,
-        },
+        id,
+        title,
+        image,
+        brand,
+        model,
+        price
       });
-      const createFinish = await addProduct(create);
-      res.status(200).send(createFinish);
+      console.log(create)
+      const searchCategory = await Category.findAll({
+        where: {
+          name: category
+        }
+      })
+
+      await create.addCategory(searchCategory);
+
+      res.status(200).send('Product created');
     }
   } catch (error) {
     console.log(error);
   }
 });
-
-// update shoes (product)
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;

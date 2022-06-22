@@ -4,15 +4,19 @@ module.exports = (sequelize) => {
   sequelize.define(
     "Category",
     {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       id: {
         type: DataTypes.STRING,
+        allowNull: false,
         primaryKey: true,
       },
+      name: {
+        type: DataTypes.STRING,
+      },
     },
-    { timestamps: false }
+    {
+      timestamps: false,
+      createdAt: false,
+      updatedAt: false
+    }
   );
 };

@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
       const createdCategories = await Category.bulkCreate(availableFilter);
       res.status(200).send(availableFilter);
     } else {
-        res.send(dbCategories)
+      res.send(dbCategories)
     }
   } catch (err) {
     console.log(err + " - - Catch en categories");
@@ -33,10 +33,10 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (id) {
     const categoriesApi = await axios(
-        `https://api.mercadolibre.com/sites/MLA/search?category=${id}`
-      );
-   const result = categoriesApi.data.results.map(s=>{
-    return {
+      `https://api.mercadolibre.com/sites/MLA/search?category=${id}`
+    );
+    const result = categoriesApi.data.results.map(s => {
+      return {
         id: s.id,
         title: s.title,
         image: s.thumbnail,
@@ -44,10 +44,12 @@ router.get("/:id", async (req, res) => {
         model: s.attributes ? s.attributes[2].value_name : "Not found",
         price: s.price,
       };
-   })
+    })
     result.length
       ? res.status(200).send(result)
       : res.status(400).send("Category not found");
   }
 });
+
+
 module.exports = router;
