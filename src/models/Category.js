@@ -8,8 +8,9 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      description: {
-        type: DataTypes.TEXT,
+      id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
       },
     },
     { timestamps: false }
