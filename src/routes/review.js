@@ -17,12 +17,12 @@ router.post("/", async(req, res)=>{
         res.status(200).send('Review created');
     }
 })
-router.get("/", async(req, res)=>{
-    const  {productId} = req.body
-    console.log(productId)
+router.get("/:id", async(req, res)=>{
+    const  {id} = req.params
+    console.log(id)
     const result = await Review.findAll({
         where: {
-            ProductId: productId
+            ProductId: id
         },
 
     })
