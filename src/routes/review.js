@@ -14,7 +14,13 @@ router.post("/", async(req, res)=>{
             userId: userid,
             ProductId: productid
         })
-        res.status(200).send('Review created');
+        const result = await Review.findAll({
+            where: {
+                ProductId: productid
+            },
+    
+        })
+        res.status(200).send(result);
     }
 })
 router.get("/:id", async(req, res)=>{
