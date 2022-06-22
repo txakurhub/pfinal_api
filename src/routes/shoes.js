@@ -81,7 +81,6 @@ router.post("/", async (req, res) => {
         model,
         price
       });
-      console.log(create)
       const searchCategory = await Category.findAll({
         where: {
           name: category
