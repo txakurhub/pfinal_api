@@ -9,19 +9,42 @@ router.get("/", async (req, res) => {
   try {
     const dbInfo = await getDb();
     if (!dbInfo.length) {
-      const shoesApi = await axios(
-        `https://api.mercadolibre.com/sites/MLA/search?category=MLA109026`
-      );
-      const result = shoesApi.data.results.map((s) => {
-        return {
-          id: s.id,
-          title: s.title,
-          image: s.thumbnail,
-          brand: s.attributes ? s.attributes[0].value_name : "Not found",
-          model: s.attributes ? s.attributes[2].value_name : "Not found",
-          price: s.price,
-        };
-      });
+      const url = 'https://api.mercadolibre.com/sites/MLA/search?category'
+      // const shoesApi = await axios(`https://api.mercadolibre.com/sites/MLA/search?category=MLA109026&offset=50`);
+      const first = await axios(`${url}=MLA109027`);
+      const second = await axios(`${url}=MLA414251`);
+      const third = await axios(`${url}=MLA416005`)
+      const fourth = await axios(`${url}=MLA415194`)
+      const fifth = await axios(`${url}=MLA414674`)
+      const sixth = await axios(`${url}=MLA414610`)
+      const seventh = await axios(`${url}=MLA415192`)
+      const eighth = await axios(`${url}=MLA414673`)
+      const ninth = await axios(`${url}=MLA455893`)
+      const tenth = await axios(`${url}=MLA415193`)
+
+      const pages = [first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth]
+
+      function conkat(pages) {
+        let arry = []
+        for (const i of pages) {
+          arry.push(i.data.results)
+        }
+        return arry.flat()
+      }
+      const total = conkat(pages)
+
+      const result = await Promise.all(
+        total.map(async (s) => {
+          return {
+            id: s.id,
+            title: s.title,
+            image: s.thumbnail,
+            brand: s.attributes ? s.attributes[0].value_name : "Not found",
+            model: s.attributes ? s.attributes[2].value_name : "Not found",
+            price: s.price,
+          }
+        })
+      )
       const createdInfo = await Product.bulkCreate(result);
       res.send(createdInfo);
     } else {
@@ -36,7 +59,7 @@ router.get("/", async (req, res) => {
         });
         foundShoes.length
           ? res.status(200).send(foundShoes)
-          : res.status(404).send("Sneakers not found");
+          : res.status(404).send("Product not found");
       } else {
         res.status(200).json(dbInfo);
       }
