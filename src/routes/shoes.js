@@ -4,6 +4,7 @@ const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
 const { getDb } = require("../controllers/index.js");
+const { v4: uuidv4 } = require('uuid');
 
 router.get("/", async (req, res) => {
   try {
@@ -14,7 +15,7 @@ router.get("/", async (req, res) => {
       );
       const result = shoesApi.data.results.map((s) => {
         return {
-          // id: s.id,
+          id: s.id,
           title: s.title,
           image: s.thumbnail,
           brand: s.attributes ? s.attributes[0].value_name : "Not found",
@@ -73,7 +74,9 @@ router.post("/", async (req, res) => {
     if (!title || !image || !brand || !model || !price || !category) {
       res.status(404).send("Parameters incomplete");
     } else {
+      const id = uuidv4()
       const create = await Product.create({
+        id,
         title,
         image,
         brand,
