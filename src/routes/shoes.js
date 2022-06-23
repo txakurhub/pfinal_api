@@ -1,27 +1,43 @@
-const { Router } = require("express");
+// const { Router } = require("express");
+const Router = require('express')
 const { Product, Category } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
 const { getDb } = require("../controllers/index.js");
+const { v4: uuidv4 } = require('uuid');
 
 router.get("/", async (req, res) => {
   try {
     const dbInfo = await getDb();
     if (!dbInfo.length) {
-      const shoesApi = await axios(
-        `https://api.mercadolibre.com/sites/MLA/search?category=MLA109026`
-      );
-      const result = shoesApi.data.results.map((s) => {
-        return {
-          id: s.id,
-          title: s.title,
-          image: s.thumbnail,
-          brand: s.attributes ? s.attributes[0].value_name : "Not found",
-          model: s.attributes ? s.attributes[2].value_name : "Not found",
-          price: s.price,
-        };
-      });
+      const url = 'https://api.mercadolibre.com/sites/MLA/search?category='
+      //------------------------------TODOS LOS IDS DE LAS CATEGORIAS
+      const ids = ['MLA109027', 'MLA414251', 'MLA416005', 'MLA415194', 'MLA414674', 'MLA414610', 'MLA415192', 'MLA414673', 'MLA455893', 'MLA415193']
+      //------------------------------ GET ACADA UNA DE LAS CATEGORIAS DE LA API
+      const accios = async (ids) => {
+        let arry = []
+        for (const i of ids) {
+          const res = await axios(`${url}${i}`)
+          arry.push(res.data.results)
+        }
+        return arry.flat()
+      }
+      //---------------------------------GUARDO LA EJECUCION DE LAS LLAMADAS
+      const total = await accios(ids)
+      //-----------------------------------MAPEO TODO Y TRAIGO LOS DATOS
+      const result = (
+        total.map((s) => {
+          return {
+            id: s.id,
+            title: s.title,
+            image: s.thumbnail,
+            brand: s.attributes ? s.attributes[0].value_name : "Not found",
+            model: s.attributes ? s.attributes[2].value_name : "Not found",
+            price: s.price,
+          }
+        })
+      )
       const createdInfo = await Product.bulkCreate(result);
       res.send(createdInfo);
     } else {
@@ -36,7 +52,7 @@ router.get("/", async (req, res) => {
         });
         foundShoes.length
           ? res.status(200).send(foundShoes)
-          : res.status(404).send("Sneakers not found");
+          : res.status(404).send("Product not found");
       } else {
         res.status(200).json(dbInfo);
       }
@@ -45,6 +61,8 @@ router.get("/", async (req, res) => {
     console.log(error + " ---------------error en shoes.js");
   }
 });
+
+
 
 router.get("/:id", async (req, res) => {
   try {
@@ -68,11 +86,12 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { id, title, image, brand, model, price, category } = req.body;
+    const { title, image, brand, model, price, category } = req.body;
     console.log(req.body)
-    if (!id || !title || !image || !brand || !model || !price || !category) {
+    if (!title || !image || !brand || !model || !price || !category) {
       res.status(404).send("Parameters incomplete");
     } else {
+      const id = uuidv4()
       const create = await Product.create({
         id,
         title,
@@ -81,7 +100,6 @@ router.post("/", async (req, res) => {
         model,
         price
       });
-      console.log(create)
       const searchCategory = await Category.findAll({
         where: {
           name: category

@@ -22,7 +22,15 @@ module.exports = (sequelize) => {
       },
       phone: {
         type: DataTypes.STRING,
+      },user_banned:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:false
       },
+      is_admin:{
+        type: DataTypes.BOOLEAN,
+        defaultValue:false
+      }
+      ,
       default_shipping_address: {
         type: DataTypes.TEXT,
       },
