@@ -1,12 +1,12 @@
 const { Router } = require("express");
-const { Product ,Review} = require("../db");
+const { Product, Review } = require("../db");
 const router = Router();
 
-router.post("/", async(req, res)=>{
-    const {comment, calification, userid, productid} = req.body
-    if(!comment || !calification || !userid || !productid){
+router.post("/", async (req, res) => {
+    const { comment, calification, userid, productid } = req.body
+    if (!comment || !calification || !userid || !productid) {
         res.status(404).send("Parameters incomplete");
-    }else{
+    } else {
         console.log(productid)
         const create = await Review.create({
             comment,
@@ -18,13 +18,13 @@ router.post("/", async(req, res)=>{
             where: {
                 ProductId: productid
             },
-    
+
         })
         res.status(200).send(result);
     }
 })
-router.get("/:id", async(req, res)=>{
-    const  {id} = req.params
+router.get("/:id", async (req, res) => {
+    const { id } = req.params
     console.log(id)
     const result = await Review.findAll({
         where: {
