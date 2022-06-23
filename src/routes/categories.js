@@ -1,9 +1,10 @@
 const { Router } = require("express");
-const { Category } = require("../db");
+const { Category, Product } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
 const { getDbCategories } = require("../controllers/index.js");
+const { v4: uuidv4 } = require('uuid');
 
 router.get("/", async (req, res) => {
   try {
@@ -51,5 +52,46 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => { // Crear nueva categoría
+  const { nameC } = req.body
+  console.log(nameC)
+  try {
+    if (nameC) {
+      const id = uuidv4()
+      const search = await Category.findOne({
+        where: {
+          name: nameC
+        }
+      })
+      if (!search) {
+        await Category.create({ id: id, name: nameC })
+        res.send("Category created")
+      } else {
+        res.status(404).send("The category already exists")
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+router.put('/:id', async (req, res) => { // Ruta para cambiar el nombre de una categoría
+  const { nameCategory } = req.body
+  const { id } = req.params
+  console.log(`categoria: ${nameCategory} || id: ${id}`)
+  try {
+    if (nameCategory) {
+      const searchDb = await Category.findByPk(id)
+      if (searchDb) {
+        await searchDb.update({ name: nameCategory })
+        res.status(200).send("Updated category")
+      } else {
+        res.status(404).send("ERROR")
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 module.exports = router;
