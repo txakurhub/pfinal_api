@@ -1,4 +1,5 @@
-const { Router } = require("express");
+// const { Router } = require("express");
+const Router = require('express')
 const { Product, Category } = require("../db");
 const router = Router();
 const axios = require("axios");
@@ -10,32 +11,23 @@ router.get("/", async (req, res) => {
   try {
     const dbInfo = await getDb();
     if (!dbInfo.length) {
-      const url = 'https://api.mercadolibre.com/sites/MLA/search?category'
-      // const shoesApi = await axios(`https://api.mercadolibre.com/sites/MLA/search?category=MLA109026&offset=50`);
-      const first = await axios(`${url}=MLA109027`);
-      const second = await axios(`${url}=MLA414251`);
-      const third = await axios(`${url}=MLA416005`)
-      const fourth = await axios(`${url}=MLA415194`)
-      const fifth = await axios(`${url}=MLA414674`)
-      const sixth = await axios(`${url}=MLA414610`)
-      const seventh = await axios(`${url}=MLA415192`)
-      const eighth = await axios(`${url}=MLA414673`)
-      const ninth = await axios(`${url}=MLA455893`)
-      const tenth = await axios(`${url}=MLA415193`)
-
-      const pages = [first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth]
-
-      function conkat(pages) {
+      const url = 'https://api.mercadolibre.com/sites/MLA/search?category='
+      //------------------------------TODOS LOS IDS DE LAS CATEGORIAS
+      const ids = ['MLA109027', 'MLA414251', 'MLA416005', 'MLA415194', 'MLA414674', 'MLA414610', 'MLA415192', 'MLA414673', 'MLA455893', 'MLA415193']
+      //------------------------------ GET ACADA UNA DE LAS CATEGORIAS DE LA API
+      const accios = async (ids) => {
         let arry = []
-        for (const i of pages) {
-          arry.push(i.data.results)
+        for (const i of ids) {
+          const res = await axios(`${url}${i}`)
+          arry.push(res.data.results)
         }
         return arry.flat()
       }
-      const total = conkat(pages)
-
-      const result = await Promise.all(
-        total.map(async (s) => {
+      //---------------------------------GUARDO LA EJECUCION DE LAS LLAMADAS
+      const total = await accios(ids)
+      //-----------------------------------MAPEO TODO Y TRAIGO LOS DATOS
+      const result = (
+        total.map((s) => {
           return {
             id: s.id,
             title: s.title,
