@@ -60,7 +60,7 @@ router.get("/", async (req, res) => {
         });
         foundShoes.length
           ? res.status(200).send(foundShoes)
-          : res.status(404).send("Sneakers not found");
+          : res.status(404).send("Product not found");
       } else {
         res.status(200).json(dbInfo);
       }
