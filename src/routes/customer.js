@@ -36,7 +36,7 @@ router.get("/:id",async(req,res)=>{
 // crear customers
 
 router.post("/",async(req,res)=>{
-    const {name,user,password,image,email,phone,address} = req.body
+    const {name,user,password,image,email,phone,address,admin} = req.body
     // const {order} = req.body
     try {
         //se verifica que los campos obligatorios no esten vacio
@@ -49,6 +49,7 @@ router.post("/",async(req,res)=>{
             password,
             email,
             phone,
+            is_admin:admin,
             default_shipping_address:address
         })
         // const result = await Order.findAll({where:order_id:order}) suponiendo que Order(Modelo) tiene order_id
@@ -64,7 +65,7 @@ router.post("/",async(req,res)=>{
 
 router.put("/:id",async (req,res)=>{
     const {id} = req.params
-    const {name,user,image,email,phone,address} = req.body
+    const {name,user,image,email,phone,address,baneado} = req.body
     try {
       // busco el customer
       const customer = await Customer.findByPk(id)
@@ -72,6 +73,7 @@ router.put("/:id",async (req,res)=>{
       if(!customer) res.status(404).send("ID not found")
       //si esta actualizo dependiendo los datos que me ingresan
         customer.name = name?name:customer.name
+        customer.user_banned=baneado
         customer.user = user?user:customer.user
         customer.image = image?image:customer.image
         customer.email = email?email:customer.email
