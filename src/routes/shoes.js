@@ -38,7 +38,7 @@ router.get("/", async (req, res) => {
           }
         })
       )
-      const createdInfo = await Product.bulkCreate(result);
+      const createdInfo = await Product.bulkCreate(result); 
       res.send(createdInfo);
     } else {
       const { name } = req.query;
