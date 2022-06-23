@@ -70,46 +70,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// router.get("/", async (req, res) => {
-//   try {
-//     const dbInfo = await getDb();
-//     if (!dbInfo.length) {
-//       const shoesApi = await axios(
-//         `https://api.mercadolibre.com/sites/MLA/search?category=MLA109026`
-//       );
-//       const result = shoesApi.data.results.map((s) => {
-//         return {
-//           id: s.id,
-//           title: s.title,
-//           image: s.thumbnail,
-//           brand: s.attributes ? s.attributes[0].value_name : "Not found",
-//           model: s.attributes ? s.attributes[2].value_name : "Not found",
-//           price: s.price,
-//         };
-//       });
-//       const createdInfo = await Product.bulkCreate(result);
-//       res.send(createdInfo);
-//     } else {
-//       const { name } = req.query;
-//       if (name) {
-//         const foundShoes = await Product.findAll({
-//           where: {
-//             title: {
-//               [Op.iLike]: `%${name}%`,
-//             },
-//           },
-//         });
-//         foundShoes.length
-//           ? res.status(200).send(foundShoes)
-//           : res.status(404).send("Sneakers not found");
-//       } else {
-//         res.status(200).json(dbInfo);
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error + " ---------------error en shoes.js");
-//   }
-// });
+
 
 router.get("/:id", async (req, res) => {
   try {
