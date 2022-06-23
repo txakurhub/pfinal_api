@@ -6,15 +6,41 @@ const axios = require("axios");
 
 router.get("/",async(req,res)=>{
     
+    const {items} = req.body;
+
     try {
-        const result = await createPayment()
+        const result = await createPayment(items)
         res.send(result)
     } catch (error) {
         res.send({error:error.message})
     }
 })
 
-async function createPayment (req, res){
+router.get("/success", (req, res)=>{
+    try{
+        res.send("Se completo el pago con exito")
+    }catch(error){
+        res.send({error:error.message})
+    }
+})
+
+router.get("/failure", (req, res)=>{
+    try{
+        res.send("No se puedo completo el pago")
+    }catch(error){
+        res.send({error:error.message})
+    }
+})
+
+router.get("/pending", (req, res)=>{
+    try{
+        res.send("El pago esta pendiente")
+    }catch(error){
+        res.send({error:error.message})
+    }
+})
+
+async function createPayment (items){
 
     const url = 'https://api.mercadopago.com/checkout/preferences'
 
@@ -30,8 +56,8 @@ async function createPayment (req, res){
             }
         ],
         back_urls: {
-            failure: "failure",
-            pending: "pending",
+            failure: "/failure",
+            pending: "/pending",
             success: "/success"
         }
     }
