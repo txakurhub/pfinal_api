@@ -28,11 +28,11 @@ router.get("/:id", async (req, res) => {
     const result = await Review.findAll({
         where: {
             ProductId: id
-        },
-
+        }, 
     })
     res.status(200).send(result)
 })
+
 
 module.exports = router;
 
