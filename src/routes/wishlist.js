@@ -31,12 +31,12 @@ router.get("/:id", async(req, res)=>{
     console.log(result)
     res.status(200).send(result)
 })
-router.delete("/:id", async(req, res)=>{
-    const {id} = req.params
-    const {id_user} = req.body
+router.delete("/", async(req, res)=>{
+    
+    const {id_user, id} = req.body
     console.log(id_user, "id User")
     console.log(id, "id")
-
+  
     const search = await Wishlist.findByPk(id);
     console.log(search)
     search.destroy()
