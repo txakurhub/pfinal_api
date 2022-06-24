@@ -42,7 +42,7 @@ router.get("/", async (req, res) => {
             brand: s.attributes ? s.attributes[0].value_name : "Not found",
             model: s.attributes ? s.attributes[2].value_name : "Not found",
             price: s.price,
-            Category: s.category_id
+            category: s.category_id
           }
         })
       )
