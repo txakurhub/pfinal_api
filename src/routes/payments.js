@@ -3,7 +3,7 @@ const router = Router();
 const axios = require("axios");
 
 router.post("/", async (req, res) => {
-  const items = req.body;
+  const { items, email, user_id } = req.body;
 
   try {
     const result = await createPayment(items);
@@ -23,7 +23,7 @@ router.get("/success", (req, res) => {
 
 router.get("/failure", (req, res) => {
   try {
-    res.send("No se puedo completo el pago");
+    res.send("No se pudo completar el pago");
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -60,9 +60,6 @@ async function createPayment(item) {
       return e;
     }),
   ];
-
-  console.log(payment);
-
   return result;
 }
 
