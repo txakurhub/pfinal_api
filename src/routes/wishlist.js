@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { Product ,Wishlist} = require("../db");
+const { Product ,Wishlist, wishlist_product} = require("../db");
 const router = Router();
 
 router.post("/", async(req, res)=>{
@@ -30,8 +30,22 @@ router.get("/:id", async(req, res)=>{
     })
     console.log(result)
     res.status(200).send(result)
+})
+router.delete("/:id", async(req, res)=>{
+    const {id} = req.params
+    const {id_user} = req.body
+    console.log(id_user, "id User")
+    console.log(id, "id")
 
-
+    const search = await Wishlist.findByPk(id);
+    console.log(search)
+    search.destroy()
+    const result = await Wishlist.findAll({
+        where: {
+            userId: id_user
+        },include: Product
+    });
+    res.status(200).send(result)
 })
 
 module.exports = router;
