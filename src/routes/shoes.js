@@ -14,11 +14,13 @@ router.get("/", async (req, res) => {
       const url = 'https://api.mercadolibre.com/sites/MLA/search?category='
       //------------------------------TODOS LOS IDS DE LAS CATEGORIAS
       const ids = [
-        'MLA109027', 'MLA414251',
-        'MLA416005', 'MLA415194',
-        'MLA414674', 'MLA414610',
-        'MLA415192', 'MLA414673',
-        'MLA455893', 'MLA415193'];
+        'MLA109027&BRAND=14671', 'MLA109027&BRAND=14810',
+        'MLA109027&BRAND=252310', 'MLA109027&BRAND=124578',
+        'MLA414251&BRAND=58625', 'MLA416005&BRAND=130142',
+        'MLA415194&BRAND=130114', 'MLA414674&BRAND=1088662',
+        'MLA414610&BRAND=2658635', 'MLA415192&BRAND=1088662', 'MLA414673&BRAND=238731',
+        // 'MLA455893', 'MLA414673' //---> NO TIENEN BRAND
+      ];
       //------------------------------ GET ACADA UNA DE LAS CATEGORIAS DE LA API
       const accios = async (ids) => {
         let arry = []
@@ -40,9 +42,13 @@ router.get("/", async (req, res) => {
             brand: s.attributes ? s.attributes[0].value_name : "Not found",
             model: s.attributes ? s.attributes[2].value_name : "Not found",
             price: s.price,
+            Category: s.category_id
           }
         })
       )
+
+
+
       const createdInfo = await Product.bulkCreate(result);
       res.send(createdInfo);
     } else {
@@ -63,7 +69,7 @@ router.get("/", async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error + " ---------------error en shoes.js");
+    console.log(error + "error en shoes.js");
   }
 });
 
