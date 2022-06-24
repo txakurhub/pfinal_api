@@ -39,6 +39,7 @@ router.get("/", async (req, res) => {
       //---------------------------------GUARDO LA EJECUCION DE LAS LLAMADAS
       const total = await accios(ids);
       //-----------------------------------MAPEO TODO Y TRAIGO LOS DATOS
+<<<<<<< HEAD
       const result = total.map((s) => {
         return {
           id: s.id,
@@ -50,6 +51,23 @@ router.get("/", async (req, res) => {
           Category: s.category_id,
         };
       });
+=======
+      const result = (
+        total.map((s) => {
+          return {
+            id: s.id,
+            title: s.title,
+            image: s.thumbnail,
+            brand: s.attributes ? s.attributes[0].value_name : "Not found",
+            model: s.attributes ? s.attributes[2].value_name : "Not found",
+            price: s.price,
+            category: s.category_id
+          }
+        })
+      )
+
+
+>>>>>>> d5d51d46b2ef3ea520dc18b21cfd2d70415a3502
 
       const createdInfo = await Product.bulkCreate(result);
       res.send(createdInfo);
