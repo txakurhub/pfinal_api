@@ -4,9 +4,9 @@ const axios = require("axios");
 
 
 
-router.get("/",async(req,res)=>{
+router.post("/",async(req,res)=>{
     
-    const {items} = req.body;
+    const items = req.body;
 
     try {
         const result = await createPayment(items)
@@ -40,21 +40,14 @@ router.get("/pending", (req, res)=>{
     }
 })
 
-async function createPayment (items){
+async function createPayment (item){
+
+    console.log(item)
 
     const url = 'https://api.mercadopago.com/checkout/preferences'
 
     const body = {
-        items: [
-            {
-                title: "jabon",
-                description: "para bañarse",
-                picture_url: "http://www.myapp.com/myimage.jpg",
-                category_id: "category234",
-                quantity: 1,
-                unit_price: 20
-            }
-        ],
+        items: item,
         back_urls: {
             failure: "/failure",
             pending: "/pending",
@@ -67,7 +60,6 @@ async function createPayment (items){
             Authorization: `Bearer ${process.env.ACCES_TOKEN}`
         }
     })
-    console.log(payment.data)
 
     const result = [payment.data.init_point, payment.data.items.map(e=> {return e})]
 
