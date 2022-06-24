@@ -21,6 +21,7 @@ try {
 })
 router.get("/:id", async(req, res)=>{
     const {id} = req.params
+    const { product_id} = req.body
     console.log(id)
     const result = await Wishlist.findAll({
         where: {
@@ -36,16 +37,23 @@ router.delete("/", async(req, res)=>{
     const {id_user, id} = req.body
     console.log(id_user, "id User")
     console.log(id, "id")
-  
+  if(!id_user || !id){
+    res.status(404).send("error Parameter not send")
+  }
     const search = await Wishlist.findByPk(id);
-    console.log(search)
-    search.destroy()
-    const result = await Wishlist.findAll({
-        where: {
-            userId: id_user
-        },include: Product
-    });
-    res.status(200).send(result)
+    if(search){
+        search.destroy()
+        const result = await Wishlist.findAll({
+            where: {
+                userId: id_user
+            },include: Product
+        });
+        res.status(200).send(result)
+    }
+    else{
+        res.status(400).send("error id Not Fount")
+    }
+
 })
 
 module.exports = router;
