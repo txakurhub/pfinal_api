@@ -31,6 +31,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+try {
   const { id } = req.params;
   if (id) {
     const categoriesApi = await axios(
@@ -49,7 +50,14 @@ router.get("/:id", async (req, res) => {
     result.length
       ? res.status(200).send(result)
       : res.status(400).send("Category not found");
+  }else{
+    res.status(400).send('error')
   }
+} catch (error) {
+  console.log(error)
+}
+
+  
 });
 
 router.post('/', async (req, res) => { // Crear nueva categoría
