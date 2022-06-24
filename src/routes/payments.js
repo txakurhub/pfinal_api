@@ -17,7 +17,7 @@ router.get("/success", (req, res) => {
   try {
     res.send("Se completo el pago con exito");
   } catch (error) {
-    res.send({ error: error.message });
+    res.send({ error: error.message }); 
   }
 });
 
