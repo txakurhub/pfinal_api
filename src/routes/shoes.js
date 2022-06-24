@@ -13,7 +13,12 @@ router.get("/", async (req, res) => {
     if (!dbInfo.length) {
       const url = 'https://api.mercadolibre.com/sites/MLA/search?category='
       //------------------------------TODOS LOS IDS DE LAS CATEGORIAS
-      const ids = ['MLA109027', 'MLA414251', 'MLA416005', 'MLA415194', 'MLA414674', 'MLA414610', 'MLA415192', 'MLA414673', 'MLA455893', 'MLA415193']
+      const ids = [
+        'MLA109027', 'MLA414251',
+        'MLA416005', 'MLA415194',
+        'MLA414674', 'MLA414610',
+        'MLA415192', 'MLA414673',
+        'MLA455893', 'MLA415193'];
       //------------------------------ GET ACADA UNA DE LAS CATEGORIAS DE LA API
       const accios = async (ids) => {
         let arry = []
