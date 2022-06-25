@@ -4,7 +4,7 @@ const { Product, Category } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
-const { getDb } = require("../controllers/index.js");
+const { getDb , cargarDb } = require("../controllers/index.js");
 const { v4: uuidv4 } = require("uuid");
 
 router.get("/", async (req, res) => {
@@ -47,15 +47,14 @@ router.get("/", async (req, res) => {
             image: s.thumbnail,
             brand: s.attributes ? s.attributes[0].value_name : "Not found",
             model: s.attributes ? s.attributes[2].value_name : "Not found",
-            price: s.price,
+            price: s.price, //parseInt(s.price)
             category: s.category_id
           }
         })
       )
-
-
-
-      const createdInfo = await Product.bulkCreate(result);
+      await cargarDb(result)
+        
+      const createdInfo = await Product.findAll({include:{model: Category,attributes:["id","name"]}});
       res.send(createdInfo);
     } else {
       const { name } = req.query;

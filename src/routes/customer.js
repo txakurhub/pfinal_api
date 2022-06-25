@@ -40,8 +40,10 @@ router.post("/",async(req,res)=>{
     // const {order} = req.body
     try {
         //se verifica que los campos obligatorios no esten vacio
+        
         if(!name ||!user||!password||!email) return res.status(404).send("These fields cannot be empty: [name,user,password,email]")
         //crea el costumers
+        if(await Customer.findByPk(user)) return res.status(304).send("User is already registered")
         const newCustomer = await Customer.create({
             name,
             user,
