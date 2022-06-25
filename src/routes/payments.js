@@ -55,6 +55,7 @@ async function createPayment(item) {
       Authorization: `Bearer TEST-2737431016395980-062500-c992f2fbd8706f90ef0a3ed2c9a88b9b-296800993`,
     },
   });
+////ACCES_TOKEN = APP_USR-7186342339590293-051403-1dd7693603cbe79be81d357b18b1a2cc-185162521
 
   const result = [
     payment.data.init_point,
