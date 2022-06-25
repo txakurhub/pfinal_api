@@ -4,77 +4,22 @@ const { Product, Category } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
-const { getDb , cargarDb } = require("../controllers/index.js");
+const { getDb , setDataApi } = require("../controllers/index.js");
 const { v4: uuidv4 } = require("uuid");
-
+let cargo = false
 router.get("/", async (req, res) => {
+  const {name}=req.query
   try {
-    const dbInfo = await getDb();
-    if (!dbInfo.length) {
-      const url = "https://api.mercadolibre.com/sites/MLA/search?category=";
-      //------------------------------TODOS LOS IDS DE LAS CATEGORIAS
-      const ids = [
-        "MLA109027&BRAND=14671",
-        "MLA109027&BRAND=14810",
-        "MLA109027&BRAND=252310",
-        "MLA109027&BRAND=124578",
-        "MLA414251&BRAND=58625",
-        "MLA416005&BRAND=130142",
-        "MLA415194&BRAND=130114",
-        "MLA414674&BRAND=1088662",
-        "MLA414610&BRAND=2658635",
-        "MLA415192&BRAND=1088662",
-        "MLA414673&BRAND=238731",
-        // 'MLA455893', 'MLA414673' //---> NO TIENEN BRAND
-      ];
-      //------------------------------ GET ACADA UNA DE LAS CATEGORIAS DE LA API
-      const accios = async (ids) => {
-        let arry = [];
-        for (const i of ids) {
-          const res = await axios(`${url}${i}`);
-          arry.push(res.data.results);
-        }
-        return arry.flat();
-      };
-      //---------------------------------GUARDO LA EJECUCION DE LAS LLAMADAS
-      const total = await accios(ids);
-      //-----------------------------------MAPEO TODO Y TRAIGO LOS DATOS
-      const result = (
-        total.map((s) => {
-          return {
-            id: s.id,
-            title: s.title,
-            image: s.thumbnail,
-            brand: s.attributes ? s.attributes[0].value_name : "Not found",
-            model: s.attributes ? s.attributes[2].value_name : "Not found",
-            price: s.price, //parseInt(s.price)
-            category: s.category_id
-          }
-        })
-      )
-      await cargarDb(result)
-        
-      const createdInfo = await Product.findAll({include:{model: Category,attributes:["id","name"]}});
-      res.send(createdInfo);
-    } else {
-      const { name } = req.query;
-      if (name) {
-        const foundShoes = await Product.findAll({
-          where: {
-            title: {
-              [Op.iLike]: `%${name}%`,
-            },
-          },
-        });
-        foundShoes.length
-          ? res.status(200).send(foundShoes)
-          : res.status(404).send("Product not found");
-      } else {
-        res.status(200).json(dbInfo);
-      }
-    }
+      let result = cargo ? await Product.findAll({include: { model: Category , attributes:["id","name"],throught:{attributes:[]}}}):await setDataApi()
+      cargo=true;
+      
+      // let result = await Product.findAll({include:{model: Category,attributes:["id","name"]}})
+      if(name) {
+        let filtrado = await Product.findAll({where:{title:{[Op.iLike]:`%${name}%`}},include: { model: Category , attributes:["id","name"],throught:{attributes:[]}}})
+        filtrado.length ? res.send(filtrado):res.status(404).send("Product not found")
+      }else res.json(result);
   } catch (error) {
-    console.log(error + "error en shoes.js");
+    res.status(404).send({error:error.message});
   }
 });
 
@@ -82,11 +27,7 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     if (id) {
-      const foundProduct = await Product.findByPk(id, {
-        include: {
-          model: Category,
-        },
-      });
+      const foundProduct = await Product.findByPk(id,{include: { model: Category , attributes:["id","name"],throught:{attributes:[]}}});
       if (foundProduct) {
         res.status(200).send(foundProduct);
       } else {
