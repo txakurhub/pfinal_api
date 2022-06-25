@@ -7,10 +7,10 @@ router.post("/", async (req, res) => {
 
   try {
     const result = await createPayment(items);
-    await axios.post("http://localhost:3001/order",{user_id , email , items})
+    await axios.post("http://localhost:3001/order", { user_id, email, items });
     res.send(result);
   } catch (error) {
-    console.log("Entra aca", error)
+    console.log("Entra aca", error);
     res.status(404).send({ error: error.message });
   }
 });
@@ -19,7 +19,7 @@ router.get("/success", (req, res) => {
   try {
     res.send("Se completo el pago con exito");
   } catch (error) {
-    res.send({ error: error.message }); 
+    res.send({ error: error.message });
   }
 });
 
@@ -52,7 +52,7 @@ async function createPayment(item) {
   const payment = await axios.post(url, body, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer TEST-2737431016395980-062500-c992f2fbd8706f90ef0a3ed2c9a88b9b-296800993`,
+      Authorization: `Bearer ${process.env.ACCES_TOKEN}`,
     },
   });
 
@@ -62,7 +62,7 @@ async function createPayment(item) {
       return e;
     }),
   ];
-  console.log("Es result ",result)
+  console.log("Es result ", result);
   return result;
 }
 
