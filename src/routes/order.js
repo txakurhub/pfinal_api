@@ -18,7 +18,7 @@ router.get("/:id",async(req,res)=>{
         if(found) res.send(found)
         else res.status(404).send("ID not found")
     } catch (error) {
-        res.send({error:error.message})
+        res.send({error:error.message}) 
     }
 })
 
