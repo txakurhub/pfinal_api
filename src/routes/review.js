@@ -25,15 +25,14 @@ router.post("/", async (req, res) => {
 })
 router.get("/:id", async (req, res) => {
     const { id } = req.params
-    console.log(id)
     const result = await Review.findAll({
         where: {
             ProductId: id
-        },
-
+        }, 
     })
     res.status(200).send(result)
 })
+
 
 module.exports = router;
 
