@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const axios = require("axios");
-const URL = "https://zapatillas-proyecto.herokuapp.com/";
+const URL = "https://zapatillas-proyecto.herokuapp.com";
 
 router.post("/", async (req, res) => {
   const { items, email, user_id } = req.body;
