@@ -55,6 +55,7 @@ async function createPayment(item) {
       Authorization: `Bearer ${process.env.ACCES_TOKEN}`,
     },
   });
+////ACCES_TOKEN = APP_USR-7186342339590293-051403-1dd7693603cbe79be81d357b18b1a2cc-185162521
 
   const result = [
     payment.data.init_point,
