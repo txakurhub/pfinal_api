@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
 
   try {
     const result = await createPayment(items);
-    await axios.post(URL, { user_id, email, items });
+    await axios.post(`${URL}/order`, { user_id, email, items });
     res.status(200).send(result);
   } catch (error) {
     console.log("Entra aca", error);
