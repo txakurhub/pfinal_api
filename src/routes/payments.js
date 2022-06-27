@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
   try {
     const result = await createPayment(items);
     await axios.post(URL, { user_id, email, items });
-    res.send(result);
+    res.status(200).send(result);
   } catch (error) {
     console.log("Entra aca", error);
     res.status(404).send({ error: error.message });
@@ -18,25 +18,25 @@ router.post("/", async (req, res) => {
 
 router.get("/success", (req, res) => {
   try {
-    res.send("Se completo el pago con exito");
+    res.status(200).send("Se completo el pago con exito");
   } catch (error) {
-    res.send({ error: error.message });
+    res.status(400).send({ error: error.message });
   }
 });
 
 router.get("/failure", (req, res) => {
   try {
-    res.send("No se pudo completar el pago");
+    res.status(200).send("No se pudo completar el pago");
   } catch (error) {
-    res.send({ error: error.message });
+    res.status(400).send({ error: error.message });
   }
 });
 
 router.get("/pending", (req, res) => {
   try {
-    res.send("El pago esta pendiente");
+    res.status(200).send("El pago esta pendiente");
   } catch (error) {
-    res.send({ error: error.message });
+    res.status(400).send({ error: error.message });
   }
 });
 
