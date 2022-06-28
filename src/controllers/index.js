@@ -38,7 +38,10 @@ const setDataApi = async () => {
     model: e.attributes ? e.attributes[2].value_name : "Not found",
     price: e.price, //parseInt(s.price)
     category: e.category_id,
+    stock: e.available_quantity,
+    sold: e.sold
   }));
+  
   //cargo los productos al db y necesita que ya este cargada las categoria para que se cree la relacion
   await Promise.all(
     cargoalDB.map(async (el) => {
