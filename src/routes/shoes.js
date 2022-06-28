@@ -85,7 +85,7 @@ router.put("/:id", async (req, res) => {
     product.model = model ? model : product.model;
     product.price = price ? price : product.price;
     product.stock = stock ?  product.stock - stock : product.stock
-    product.sold = sold ? sold + product.sold : product.sold
+    product.sold = sold ? product.sold + parseInt(sold)  : product.sold
     await product.save(); // guardamos los cambios
     res.send("Update");
     //console.log(JSON.stringify(product))

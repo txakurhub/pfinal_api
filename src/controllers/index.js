@@ -39,7 +39,7 @@ const setDataApi = async () => {
     price: e.price, //parseInt(s.price)
     category: e.category_id,
     stock: e.available_quantity,
-    sold: e.sold
+    sold: e.sold_quantity
   }));
   
   //cargo los productos al db y necesita que ya este cargada las categoria para que se cree la relacion
