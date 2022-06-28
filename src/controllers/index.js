@@ -49,7 +49,7 @@ const setDataApi = async () => {
     })
   );
   //console.log("Datos cargados");
-  let dataDb = await Product.findAll({include: { model: Category , attributes:["id","name"],throught:{attributes:[]}}});
+  let dataDb = await Product.findAll({include: { all: true }});
   return dataDb;
 };
 
