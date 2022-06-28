@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
       email,
     });
     res.send("User created");
-  } catch (err) {
+  } catch (err) { 
     console.log(err);
   }
 });
