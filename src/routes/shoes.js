@@ -10,12 +10,12 @@ let cargo = false
 router.get("/", async (req, res) => {
   const {name}=req.query
   try {
-      let result = cargo ? await Product.findAll({include: { model: Category , attributes:["id","name"],throught:{attributes:[]}}}):await setDataApi()
+      let result = cargo ? await Product.findAll({include: { all: true }}):await setDataApi()
       cargo=true;
       
       // let result = await Product.findAll({include:{model: Category,attributes:["id","name"]}})
       if(name) {
-        let filtrado = await Product.findAll({where:{title:{[Op.iLike]:`%${name}%`}},include: { model: Category , attributes:["id","name"],throught:{attributes:[]}}})
+        let filtrado = await Product.findAll({where:{title:{[Op.iLike]:`%${name}%`}},include: { all: true }})
         filtrado.length ? res.send(filtrado):res.status(404).send("Product not found")
       }else res.json(result);
   } catch (error) {
@@ -27,7 +27,7 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     if (id) {
-      const foundProduct = await Product.findByPk(id,{include: { model: Category , attributes:["id","name"],throught:{attributes:[]}}});
+      const foundProduct = await Product.findByPk(id,{include: { all: true }});
       if (foundProduct) {
         res.status(200).send(foundProduct);
       } else {
