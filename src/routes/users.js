@@ -1,8 +1,8 @@
 const { Router } = require("express");
 const router = Router();
-const { initializeApp } = require("firebase-admin/app");
+// const { initializeApp } = require("firebase-admin/app");
 const { db } = require("../firebase");
-const { route } = require("./order");
+// const { route } = require("./order");
 
 router.get("/", async (req, res) => {
   try {
@@ -49,11 +49,11 @@ router.post("/", async (req, res) => {
     });
     res.send("User created");
   } catch (err) { 
-    console.log(err);
+    console.log(err+ 'aca');
   }
 });
 
-router.get("/delete/:id")
+// router.get("/delete/:id")
 
 
 
