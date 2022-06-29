@@ -49,11 +49,18 @@ router.post("/", async (req, res) => {
     });
     res.send("User created");
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   } catch (err) { 
 =======
   } catch (err) {
 >>>>>>> fa4a723 (user con firebase y modificaciones random)
+=======
+  } catch (err) { 
+=======
+  } catch (err) {
+>>>>>>> e876d43 (user con firebase y modificaciones random)
+>>>>>>> 9fd11d1 (update lean)
     console.log(err);
   }
 });
