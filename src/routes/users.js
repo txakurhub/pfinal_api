@@ -38,7 +38,8 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { lastname, firstname, admin, image, banned, phone, email } = req.body;
+  const { lastname, firstname, admin, image, banned, phone, email, password } =
+    req.body;
   try {
     await db.collection("user").add({
       lastname,
@@ -46,25 +47,25 @@ router.post("/", async (req, res) => {
       image,
       phone,
       email,
+      admin,
+      banned,
+      password,
     });
     res.send("User created");
-
-  } catch (err) { 
+  } catch (err) {
     console.log(err);
   }
 });
 
-router.get("/delete/:id",async (req,res)=>{
-  const {id} =req.params
+router.get("/delete/:id", async (req, res) => {
+  const { id } = req.params;
   await db.collection("user").doc(id).delete();
-  res.send("user deleted")
-})
+  res.send("user deleted");
+});
 
-
-router.post("/update/:id",async (req,res)=>{
-  const {id} =req.params
+router.post("/update/:id", async (req, res) => {
+  const { id } = req.params;
   await db.collection("user").doc(id).update(req.body);
-})
-
+});
 
 module.exports = router;
