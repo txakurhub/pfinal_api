@@ -48,12 +48,17 @@ router.post("/", async (req, res) => {
       email,
     });
     res.send("User created");
+<<<<<<< HEAD
 
   } catch (err) { 
+=======
+  } catch (err) {
+>>>>>>> fa4a723 (user con firebase y modificaciones random)
     console.log(err);
   }
 });
 
+<<<<<<< HEAD
 router.get("/delete/:id",async (req,res)=>{
   const {id} =req.params
   await db.collection("user").doc(id).delete();
@@ -68,3 +73,10 @@ router.post("/update/:id",async (req,res)=>{
 
 
 module.exports = router;
+=======
+router.get("/delete/:id")
+
+
+
+module.exports = router;
+>>>>>>> fa4a723 (user con firebase y modificaciones random)
