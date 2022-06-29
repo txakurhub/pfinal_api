@@ -48,13 +48,23 @@ router.post("/", async (req, res) => {
       email,
     });
     res.send("User created");
+
   } catch (err) { 
     console.log(err);
   }
 });
 
-router.get("/delete/:id")
+router.get("/delete/:id",async (req,res)=>{
+  const {id} =req.params
+  await db.collection("user").doc(id).delete();
+  res.send("user deleted")
+})
 
+
+router.post("/update/:id",async (req,res)=>{
+  const {id} =req.params
+  await db.collection("user").doc(id).update(req.body);
+})
 
 
 module.exports = router;
