@@ -1,8 +1,8 @@
 const { Router } = require("express");
 const router = Router();
-const { initializeApp } = require("firebase-admin/app");
+// const { initializeApp } = require("firebase-admin/app");
 const { db } = require("../firebase");
-const { route } = require("./order");
+// const { route } = require("./order");
 
 router.get("/", async (req, res) => {
   try {
@@ -57,14 +57,19 @@ router.post("/", async (req, res) => {
 >>>>>>> fa4a723 (user con firebase y modificaciones random)
 =======
   } catch (err) { 
+<<<<<<< HEAD
 =======
   } catch (err) {
 >>>>>>> e876d43 (user con firebase y modificaciones random)
 >>>>>>> 9fd11d1 (update lean)
     console.log(err);
+=======
+    console.log(err+ 'aca');
+>>>>>>> 5bc8569 (update)
   }
 });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 router.get("/delete/:id",async (req,res)=>{
   const {id} =req.params
@@ -82,6 +87,9 @@ router.post("/update/:id",async (req,res)=>{
 module.exports = router;
 =======
 router.get("/delete/:id")
+=======
+// router.get("/delete/:id")
+>>>>>>> 869f0f9 (update lean)
 
 
 
