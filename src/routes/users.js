@@ -52,6 +52,7 @@ router.post("/", async (req, res) => {
       password,
     });
     res.send("User created");
+
   } catch (err) {
     console.log(err);
   }
