@@ -1,8 +1,8 @@
 const { Router } = require("express");
 const router = Router();
-// const { initializeApp } = require("firebase-admin/app");
+const { initializeApp } = require("firebase-admin/app");
 const { db } = require("../firebase");
-// const { route } = require("./order");
+const { route } = require("./order");
 
 router.get("/", async (req, res) => {
   try {
@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
     res.send(
       querySnapshot.docs.map((d) => {
         return {
-          id: d.id,
+          // id: d.id,
           image: d.data().image,
           firstname: d.data().firstname,
           admin: d.data().admin,
@@ -52,6 +52,12 @@ router.post("/", async (req, res) => {
       password,
     });
     res.send("User created");
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> a5b4548 (rebasando ando)
 
   } catch (err) {
 <<<<<<< HEAD
@@ -64,11 +70,16 @@ router.post("/", async (req, res) => {
   } catch (err) {
 >>>>>>> e876d43 (user con firebase y modificaciones random)
 >>>>>>> 9fd11d1 (update lean)
+<<<<<<< HEAD
 >>>>>>> f0d5471 (firestore rutas user)
     console.log(err);
 =======
-    console.log(err+ 'aca');
->>>>>>> 5bc8569 (update)
+>>>>>>> a5b4548 (rebasando ando)
+=======
+
+  } catch (err) { 
+>>>>>>> 1799872 (qcyo)
+    console.log(err);
   }
 });
 
@@ -76,6 +87,7 @@ router.post("/", async (req, res) => {
 router.get("/delete/:id", async (req, res) => {
   const { id } = req.params;
 =======
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 router.get("/delete/:id",async (req,res)=>{
@@ -100,6 +112,9 @@ router.get("/delete/:id")
 =======
 // router.get("/delete/:id")
 >>>>>>> 869f0f9 (update lean)
+=======
+router.get("/delete/:id")
+>>>>>>> 1799872 (qcyo)
 
 
 >>>>>>> f0d5471 (firestore rutas user)
