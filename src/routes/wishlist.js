@@ -23,15 +23,13 @@ try {
 })
 router.get("/:id", async(req, res)=>{
     const {id} = req.params
-    const { product_id} = req.body
-    console.table(req.body)
     const result = await Wishlist.findAll({
         where: {
             userId: id
         },
         include: Product
     })
-    console.log(result)
+    console.log(result, "user search")
     res.status(200).send(result)
 })
 router.delete("/", async(req, res)=>{
