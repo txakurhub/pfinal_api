@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
     res.send(
       querySnapshot.docs.map((d) => {
         return {
-          // id: d.id,
+          id: d.id,
           image: d.data().image,
           firstname: d.data().firstname,
           admin: d.data().admin,
@@ -52,47 +52,16 @@ router.post("/", async (req, res) => {
       password,
     });
     res.send("User created");
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> a5b4548 (rebasando ando)
 
   } catch (err) {
-<<<<<<< HEAD
-=======
->>>>>>> fa4a723 (user con firebase y modificaciones random)
-=======
-  } catch (err) { 
-<<<<<<< HEAD
-=======
-  } catch (err) {
->>>>>>> e876d43 (user con firebase y modificaciones random)
->>>>>>> 9fd11d1 (update lean)
-<<<<<<< HEAD
->>>>>>> f0d5471 (firestore rutas user)
-    console.log(err);
-=======
->>>>>>> a5b4548 (rebasando ando)
-=======
-
-  } catch (err) { 
->>>>>>> 1799872 (qcyo)
     console.log(err);
   }
 });
 
-<<<<<<< HEAD
-router.get("/delete/:id", async (req, res) => {
-  const { id } = req.params;
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
+
 router.get("/delete/:id",async (req,res)=>{
   const {id} =req.params
->>>>>>> f0d5471 (firestore rutas user)
   await db.collection("user").doc(id).delete();
   res.send("user deleted");
 });
@@ -100,23 +69,8 @@ router.get("/delete/:id",async (req,res)=>{
 router.post("/update/:id", async (req, res) => {
   const { id } = req.params;
   await db.collection("user").doc(id).update(req.body);
-<<<<<<< HEAD
-});
-=======
 })
 
 
 module.exports = router;
-=======
-router.get("/delete/:id")
-=======
-// router.get("/delete/:id")
->>>>>>> 869f0f9 (update lean)
-=======
-router.get("/delete/:id")
->>>>>>> 1799872 (qcyo)
 
-
->>>>>>> f0d5471 (firestore rutas user)
-
-module.exports = router;
