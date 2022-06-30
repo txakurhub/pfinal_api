@@ -39,6 +39,12 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/pictures/:id", async (req, res) => {
+  const { id } = req.params;
+  const pictures = await axios.get("https://api.mercadolibre.com/items/" + id);
+  res.send(pictures.data.pictures.map(r => r.url));
+});
+
 router.post("/", async (req, res) => {
   try {
     const { title, image, brand, model, price, category } = req.body;
