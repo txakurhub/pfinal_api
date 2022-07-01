@@ -100,6 +100,22 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+router.put("/shoppingcart/:id",async (req,res)=>{
+  const { id } = req.params;
+  try {
+    const product = await Product.findByPk(id)
+    if(product){
+      const {sold,stock} = req.body
+      if(stock > product.stock) return res.status(404).send("Error la cantidad de productos que intentas comprar excede el stock")
+      product.stock = product.stock - stock
+      product.sold = product.sold + sold
+      await product.save()
+      return res.send("La compra se realizó correctamente.")
+    }} catch (error) {
+      res.send({error:error.message})
+    }
+})
+
 //delete shoes (product)
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
