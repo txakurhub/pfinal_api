@@ -29,7 +29,21 @@ router.get("/", async (req, res) => {
     console.log(err + " - - Catch en categories");
   }
 });
+//Ruta para usar en admin!!
+router.get("/admin",async(req,res)=>{
+  try {
+    const foundCategories = await Category.findAll({include: { all:true}});
+    const result = JSON.parse(JSON.stringify(foundCategories)).map(e=>{
+      const cantidad = e.Products.length
+      return{id:e.id,name:e.name,cantidad}
+    })
+    res.send(result)
+  } catch (error) {
+    res.status(404).send({error:error.message})
+  }
+})
 
+//que es esta ruta DD: ????!!!
 router.get("/:id", async (req, res) => {
 try {
   const { id } = req.params;
@@ -88,7 +102,6 @@ router.put('/:id', async (req, res) => { // Ruta para cambiar el nombre de una c
     console.log(error)
   }
 })
-
 
 
 module.exports = router;
