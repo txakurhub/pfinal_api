@@ -99,7 +99,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//
+// ruta para actualizar carrito cuando hacen una compra
 router.put("/shoppingcart/:id",async (req,res)=>{
   const { id } = req.params;
   try {
