@@ -4,7 +4,7 @@ const router = Router();
 
 router.get("/",async (req,res)=>{
     try {
-        const result = await Order.findAll({include: { all: true }})
+        const result = await Order.findAll({include:{model: Customer,throught:{attributes:[]}}})
         res.send(result)
     } catch (error) {
         res.status(404).send({error:error.message})
@@ -24,7 +24,6 @@ router.get("/:id",async(req,res)=>{
 
 router.post("/", async (req,res)=>{
     const {user_id , email , items} = req.body
-
     const precio = items.map(e=>parseFloat(e.unit_price)*parseFloat(e.quantity)).reduce((a,b)=>a+b)
     try {
         const date = new Date()
@@ -39,11 +38,6 @@ router.post("/", async (req,res)=>{
         }
         const newOrder = await Order.create(obj)
         newOrder.addCustomer(found)
-        items.map(async(item) => (
-            await newOrder.addProduct(item.id)
-        ) )
-        newOrder.addProduct()
-    
         res.send(newOrder)
     } catch (error) {
         res.status(404).send({error:error.message})
