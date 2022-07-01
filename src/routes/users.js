@@ -65,5 +65,13 @@ router.post("/update/:id", async (req, res) => {
   const { id } = req.params;
   await db.collection("user").doc(id).update(req.body);
 });
+router.post("/admin/update/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.collection("user").doc(id).update(req.body);
+  } catch (error) {
+      res.status(404).send({error:error.message})
+  }
+});
 
 module.exports = router;
