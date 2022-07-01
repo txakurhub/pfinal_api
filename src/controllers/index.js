@@ -57,7 +57,7 @@ const setDataApi = async () => {
 };
 
 const getDbCategories = async () => {
-  const foundCategories = await Category.findAll({include: { model: Product , attributes:[],throught:{attributes:[]}}});
+  const foundCategories = await Category.findAll({include: { all:true}});
   return foundCategories;
 };
 

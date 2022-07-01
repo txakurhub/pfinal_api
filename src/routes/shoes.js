@@ -78,7 +78,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { title, image, brand, model, price, stock, sold} = req.body;
+  const { title, image, brand, model, price, stock} = req.body;
   try {
     // busco el producto
     const product = await Product.findByPk(id);
@@ -90,8 +90,7 @@ router.put("/:id", async (req, res) => {
     product.brand = brand ? brand : product.brand;
     product.model = model ? model : product.model;
     product.price = price ? price : product.price;
-    product.stock = stock ?  product.stock - stock : product.stock
-    product.sold = sold ? product.sold + parseInt(sold)                           : product.sold
+    product.stock = stock ? stock : product.stock
     await product.save(); // guardamos los cambios
     res.send("Update");
     //console.log(JSON.stringify(product))
@@ -99,6 +98,24 @@ router.put("/:id", async (req, res) => {
     res.send({ error: error.message });
   }
 });
+
+// ruta para actualizar carrito cuando hacen una compra
+router.put("/shoppingcart/:id",async (req,res)=>{
+  const { id } = req.params;
+  try {
+    const product = await Product.findByPk(id)
+    if(product){
+      const {sold,stock} = req.body
+      if(stock > product.stock) return res.status(404).send("Error la cantidad de productos que intentas comprar excede el stock")
+      product.stock = product.stock - stock
+      product.sold = product.sold + sold
+      await product.save()
+      return res.send("La compra se realizó correctamente.")
+    }
+  } catch (error) {
+    res.send({error:error.message})
+  }
+})
 
 //delete shoes (product)
 router.delete("/:id", async (req, res) => {
