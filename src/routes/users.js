@@ -38,18 +38,16 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { lastname, firstname, admin, image, banned, phone, email, password } =
+  const { lastname, firstname, admin, banned, phone, email } =
     req.body;
   try {
     await db.collection("user").add({
       lastname,
       firstname,
-      image,
       phone,
       email,
       admin,
       banned,
-      password,
     });
     res.send("User created");
   } catch (err) {
