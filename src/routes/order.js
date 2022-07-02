@@ -3,13 +3,21 @@ const { Customer, Order } = require("../db");
 const router = Router();
 
 router.get("/", async (req, res) => {
+    const { email } = req.body;
     try {
-        const result = await Order.findAll({ include: { all: true } })
-        res.send(result)
+        if(!email){
+            const result = await Order.findAll({ include: { all: true } })
+            res.send(result)
+        }else{
+            const result = await Order.findAll({ where: {order_email: email}, include: { all: true } })
+            res.send(result) 
+        }
+
     } catch (error) {
         res.status(404).send({ error: error.message })
     }
 })
+
 
 router.get("/:id", async (req, res) => {
     const { id } = req.params
