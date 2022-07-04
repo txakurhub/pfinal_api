@@ -7,3 +7,4 @@ conn.sync({ force: true }).then(() => {
     console.log("Servidor corriendo en el puerto " + PORT);
   });
 });
+ 
