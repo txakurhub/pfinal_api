@@ -22,8 +22,17 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
       },
       price: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
       },
+      category:{
+        type:DataTypes.STRING
+      },
+      stock:{
+        type: DataTypes.INTEGER
+      },
+      sold:{
+        type:DataTypes.INTEGER
+      }
     },
     { timestamps: false }
   );

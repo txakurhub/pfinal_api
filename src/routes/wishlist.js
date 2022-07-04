@@ -5,6 +5,7 @@ const router = Router();
 router.post("/", async(req, res)=>{
 try {
     const {user_id, product_id} = req.body
+    console.table(req.body)
     if(!user_id || !product_id){
         res.status(404).send("Parameters incompletes")
     }else{
@@ -13,7 +14,8 @@ try {
         });
         const searchProduct = await Product.findByPk(product_id);
         await create.addProduct(searchProduct);
-        res.status(200).send('Wishlist create');
+
+        res.status(200).send(searchProduct);
     }
 } catch (error) {
     console.log(error)
@@ -21,7 +23,8 @@ try {
 })
 router.get("/:id", async(req, res)=>{
     const {id} = req.params
-    console.log(id)
+    const { product_id} = req.body
+    console.table(req.body)
     const result = await Wishlist.findAll({
         where: {
             userId: id
@@ -31,21 +34,33 @@ router.get("/:id", async(req, res)=>{
     console.log(result)
     res.status(200).send(result)
 })
-router.delete("/:id", async(req, res)=>{
-    const {id} = req.params
-    const {id_user} = req.body
+router.delete("/", async(req, res)=>{
+    
+    const {id_user, id} = req.body
     console.log(id_user, "id User")
     console.log(id, "id")
-
+  if(!id_user || !id){
+    res.status(404).send("error Parameter not send")
+  }
     const search = await Wishlist.findByPk(id);
-    console.log(search)
-    search.destroy()
-    const result = await Wishlist.findAll({
-        where: {
-            userId: id_user
-        },include: Product
-    });
-    res.status(200).send(result)
+    if(search){
+        search.destroy()
+        const result = await Wishlist.findAll({
+            where: {
+                userId: id_user
+            },include: Product
+        });
+        res.status(200).send(result)
+    }
+    else{
+        const result = await Wishlist.findAll({
+            where: {
+                userId: id_user
+            },include: Product
+        });
+        res.status(400).send(result)
+    }
+
 })
 
 module.exports = router;

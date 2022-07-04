@@ -3,7 +3,7 @@ const { Category, Product } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
-const { getDbCategories } = require("../controllers/index.js");
+const { getDbCategories,getDb } = require("../controllers/index.js");
 const { v4: uuidv4 } = require('uuid');
 
 router.get("/", async (req, res) => {
@@ -31,25 +31,20 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+try {
   const { id } = req.params;
+  const allProducts = await getDb()
   if (id) {
-    const categoriesApi = await axios(
-      `https://api.mercadolibre.com/sites/MLA/search?category=${id}`
-    );
-    const result = categoriesApi.data.results.map(s => {
-      return {
-        id: s.id,
-        title: s.title,
-        image: s.thumbnail,
-        brand: s.attributes ? s.attributes[0].value_name : "Not found",
-        model: s.attributes ? s.attributes[2].value_name : "Not found",
-        price: s.price,
-      };
-    })
-    result.length
-      ? res.status(200).send(result)
-      : res.status(400).send("Category not found");
+   let found = await allProducts.filter((e)=>e.category?e.category==id:e.category.id==id)
+   res.status(200).send(found)
+  }else{
+    res.status(400).send('error')
   }
+} catch (error) {
+  console.log(error)
+}
+
+  
 });
 
 router.post('/', async (req, res) => { // Crear nueva categoría
@@ -72,13 +67,13 @@ router.post('/', async (req, res) => { // Crear nueva categoría
     }
   } catch (error) {
     console.log(error)
+    res.status(404).send(error.message)
   }
 })
 
 router.put('/:id', async (req, res) => { // Ruta para cambiar el nombre de una categoría
   const { nameCategory } = req.body
   const { id } = req.params
-  console.log(`categoria: ${nameCategory} || id: ${id}`)
   try {
     if (nameCategory) {
       const searchDb = await Category.findByPk(id)
@@ -93,5 +88,7 @@ router.put('/:id', async (req, res) => { // Ruta para cambiar el nombre de una c
     console.log(error)
   }
 })
+
+
 
 module.exports = router;

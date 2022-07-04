@@ -1,78 +1,33 @@
 // const { Router } = require("express");
-const Router = require('express')
+const Router = require("express");
 const { Product, Category } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
-const { getDb } = require("../controllers/index.js");
-const { v4: uuidv4 } = require('uuid');
-
+const { getDb , setDataApi } = require("../controllers/index.js");
+const { v4: uuidv4 } = require("uuid");
+let cargo = false
 router.get("/", async (req, res) => {
+  const {name}=req.query
   try {
-    const dbInfo = await getDb();
-    if (!dbInfo.length) {
-      const url = 'https://api.mercadolibre.com/sites/MLA/search?category='
-      //------------------------------TODOS LOS IDS DE LAS CATEGORIAS
-      const ids = ['MLA109027', 'MLA414251', 'MLA416005', 'MLA415194', 'MLA414674', 'MLA414610', 'MLA415192', 'MLA414673', 'MLA455893', 'MLA415193']
-      //------------------------------ GET ACADA UNA DE LAS CATEGORIAS DE LA API
-      const accios = async (ids) => {
-        let arry = []
-        for (const i of ids) {
-          const res = await axios(`${url}${i}`)
-          arry.push(res.data.results)
-        }
-        return arry.flat()
-      }
-      //---------------------------------GUARDO LA EJECUCION DE LAS LLAMADAS
-      const total = await accios(ids)
-      //-----------------------------------MAPEO TODO Y TRAIGO LOS DATOS
-      const result = (
-        total.map((s) => {
-          return {
-            id: s.id,
-            title: s.title,
-            image: s.thumbnail,
-            brand: s.attributes ? s.attributes[0].value_name : "Not found",
-            model: s.attributes ? s.attributes[2].value_name : "Not found",
-            price: s.price,
-          }
-        })
-      )
-      const createdInfo = await Product.bulkCreate(result);
-      res.send(createdInfo);
-    } else {
-      const { name } = req.query;
-      if (name) {
-        const foundShoes = await Product.findAll({
-          where: {
-            title: {
-              [Op.iLike]: `%${name}%`,
-            },
-          },
-        });
-        foundShoes.length
-          ? res.status(200).send(foundShoes)
-          : res.status(404).send("Product not found");
-      } else {
-        res.status(200).json(dbInfo);
-      }
-    }
+      let result = cargo ? await Product.findAll({include: { all: true }}):await setDataApi()
+      cargo=true;
+      
+      // let result = await Product.findAll({include:{model: Category,attributes:["id","name"]}})
+      if(name) {
+        let filtrado = await Product.findAll({where:{title:{[Op.iLike]:`%${name}%`}},include: { all: true }})
+        filtrado.length ? res.send(filtrado):res.status(404).send("Product not found")
+      }else res.json(result);
   } catch (error) {
-    console.log(error + " ---------------error en shoes.js");
+    res.status(404).send({error:error.message});
   }
 });
-
-
 
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     if (id) {
-      const foundProduct = await Product.findByPk(id, {
-        include: {
-          model: Category
-        }
-      });
+      const foundProduct = await Product.findByPk(id,{include: { all: true }});
       if (foundProduct) {
         res.status(200).send(foundProduct);
       } else {
@@ -84,31 +39,37 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/pictures/:id", async (req, res) => {
+  const { id } = req.params;
+  const pictures = await axios.get("https://api.mercadolibre.com/items/" + id);
+  res.send(pictures.data.pictures.map(r => r.url));
+});
+
 router.post("/", async (req, res) => {
   try {
     const { title, image, brand, model, price, category } = req.body;
-    console.log(req.body)
+    console.log(req.body);
     if (!title || !image || !brand || !model || !price || !category) {
       res.status(404).send("Parameters incomplete");
     } else {
-      const id = uuidv4()
+      const id = uuidv4();
       const create = await Product.create({
         id,
         title,
         image,
         brand,
         model,
-        price
+        price,
       });
       const searchCategory = await Category.findAll({
         where: {
-          name: category
-        }
-      })
+          name: category,
+        },
+      });
 
       await create.addCategory(searchCategory);
 
-      res.status(200).send('Product created');
+      res.status(200).send("Product created");
     }
   } catch (error) {
     console.log(error);
@@ -117,7 +78,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { title, image, brand, model, price } = req.body;
+  const { title, image, brand, model, price, stock, sold} = req.body;
   try {
     // busco el producto
     const product = await Product.findByPk(id);
@@ -129,6 +90,8 @@ router.put("/:id", async (req, res) => {
     product.brand = brand ? brand : product.brand;
     product.model = model ? model : product.model;
     product.price = price ? price : product.price;
+    product.stock = stock ?  product.stock - stock : product.stock
+    product.sold = sold ? product.sold + parseInt(sold)                           : product.sold
     await product.save(); // guardamos los cambios
     res.send("Update");
     //console.log(JSON.stringify(product))

@@ -10,6 +10,8 @@ module.exports = (sequelize) => {
       },
       user: {
         type: DataTypes.STRING,
+        unique:true,
+        primaryKey:true
       },
       password: {
         type: DataTypes.STRING,
@@ -35,5 +37,4 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT,
       },
     }, { timestamps: false });
-
 };

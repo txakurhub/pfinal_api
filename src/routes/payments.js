@@ -1,29 +1,37 @@
-const { Router } = require("express"); 
+const { Router } = require("express");
 const router = Router();
 const axios = require("axios");
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 
-router.post("/",async(req,res)=>{
-    
-    const items = req.body;
+router.post("/", async (req, res) => {
+  const { items, email, user_id } = req.body;
 
-    try {
-        // const result = await createPayment(items)
-        const result = sendEmail()
-        res.send(result)
-    } catch (error) {
-        res.send({error:error.message})
-    }
-})
+  try {
+    const result = await createPayment(items);
+    await axios.post("http://localhost:3001/order", { user_id, email, items });
+    res.send(result);
+  } catch (error) {
+    console.log("Entra aca", error);
+    res.status(404).send({ error: error.message });
+  }
+});
 
-router.get("/success", (req, res)=>{
-    try{
-        res.send("Se completo el pago con exito")
-    }catch(error){
-        res.send({error:error.message})
-    }
-})
+router.get("/success", (req, res) => {
+  try {
+    res.send("Se completo el pago con exito");
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+});
+
+router.get("/pending", (req, res) => {
+  try {
+    res.send("El pago esta pendiente");
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+});
 
 router.get("/failure", (req, res)=>{
     try{
@@ -67,6 +75,14 @@ async function createPayment (item){
 
     return result;
 
+    const result2 = [
+      payment.data.init_point,
+      payment.data.items.map((e) => {
+      return e;
+      }),
+    ];
+    console.log("Es result ", result);
+    return result;
 }
 
     const CLIENT_ID = '1090339452314-a0cmi0ghmef7smtcp3ksnst6od3gv40s.apps.googleusercontent.com';
@@ -75,8 +91,8 @@ async function createPayment (item){
     const URI = 'https://developers.google.com/oauthplayground';
 
     
-        async function sendEmail(){
-            const oAuthClient = new google.auth.OAuth2(
+    async function sendEmail(){
+        const oAuthClient = new google.auth.OAuth2(
                 CLIENT_ID,
                 SECRET,
                 URI
