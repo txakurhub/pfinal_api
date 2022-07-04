@@ -4,22 +4,21 @@ const { Product, Category } = require("../db");
 const router = Router();
 const axios = require("axios");
 const { Op } = require("sequelize");
-const { getDb , setDataApi } = require("../controllers/index.js");
-const { v4: uuidv4 } = require("uuid");
+const { getDb, setDataApi } = require("../controllers/index.js");
 let cargo = false
 router.get("/", async (req, res) => {
-  const {name}=req.query
+  const { name } = req.query
   try {
-      let result = cargo ? await Product.findAll({include: { all: true }}):await setDataApi()
-      cargo=true;
-      
-      // let result = await Product.findAll({include:{model: Category,attributes:["id","name"]}})
-      if(name) {
-        let filtrado = await Product.findAll({where:{title:{[Op.iLike]:`%${name}%`}},include: { all: true }})
-        filtrado.length ? res.send(filtrado):res.status(404).send("Product not found")
-      }else res.json(result);
+    let result = cargo ? await Product.findAll({ include: { all: true } }) : await setDataApi()
+    cargo = true;
+
+    // let result = await Product.findAll({include:{model: Category,attributes:["id","name"]}})
+    if (name) {
+      let filtrado = await Product.findAll({ where: { title: { [Op.iLike]: `%${name}%` } }, include: { all: true } })
+      filtrado.length ? res.send(filtrado) : res.status(404).send("Product not found")
+    } else res.json(result);
   } catch (error) {
-    res.status(404).send({error:error.message});
+    res.status(404).send({ error: error.message });
   }
 });
 
@@ -27,7 +26,7 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     if (id) {
-      const foundProduct = await Product.findByPk(id,{include: { all: true }});
+      const foundProduct = await Product.findByPk(id, { include: { all: true } });
       if (foundProduct) {
         res.status(200).send(foundProduct);
       } else {
@@ -52,9 +51,8 @@ router.post("/", async (req, res) => {
     if (!title || !image || !brand || !model || !price || !category) {
       res.status(404).send("Parameters incomplete");
     } else {
-      const id = uuidv4();
       const create = await Product.create({
-        id,
+        id: `MLA${Math.round(Math.random() * 1000000000)}`,
         title,
         image,
         brand,
@@ -78,7 +76,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { title, image, brand, model, price, stock} = req.body;
+  const { title, image, brand, model, price, stock } = req.body;
   try {
     // busco el producto
     const product = await Product.findByPk(id);
@@ -100,20 +98,20 @@ router.put("/:id", async (req, res) => {
 });
 
 // ruta para actualizar carrito cuando hacen una compra
-router.put("/shoppingcart/:id",async (req,res)=>{
+router.put("/shoppingcart/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const product = await Product.findByPk(id)
-    if(product){
-      const {sold,stock} = req.body
-      if(stock > product.stock) return res.status(404).send("Error la cantidad de productos que intentas comprar excede el stock")
+    if (product) {
+      const { sold, stock } = req.body
+      if (stock > product.stock) return res.status(404).send("Error la cantidad de productos que intentas comprar excede el stock")
       product.stock = product.stock - stock
       product.sold = product.sold + sold
       await product.save()
       return res.send("La compra se realizó correctamente.")
     }
   } catch (error) {
-    res.send({error:error.message})
+    res.send({ error: error.message })
   }
 })
 
