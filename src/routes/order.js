@@ -2,25 +2,6 @@ const { Router } = require("express");
 const { Customer, Order } = require("../db");
 const router = Router();
 
-<<<<<<< HEAD
-router.get("/",async (req,res)=>{
-    try {
-        const result = await Order.findAll({include:{model: Customer,throught:{attributes:[]}}})
-        res.send(result)
-    } catch (error) {
-        res.status(404).send({error:error.message})
-    }
-})
- 
-router.get("/:id",async(req,res)=>{
-    const {id} = req.params
-    try {
-        const found = await Order.findByPk(id,{include:{model: Customer,throught:{attributes:[]}}})
-        if(found) res.send(found)
-        else res.status(404).send("ID not found")
-    } catch (error) {
-        res.send({error:error.message}) 
-=======
 router.get("/", async (req, res) => {
   const { email } = req.body;
   try {
@@ -30,7 +11,6 @@ router.get("/", async (req, res) => {
     } else {
       const result = await Order.findAll({ where: { order_email: email }, include: { all: true } })
       res.send(result)
->>>>>>> 09bdea2fabd909b89da000612a084a4a8316bf30
     }
 
   } catch (error) {
