@@ -63,11 +63,13 @@ router.get("/delete/:id", async (req, res) => {
 
 router.post("/update/:id", async (req, res) => {
   const { id } = req.params;
+  console.log(req.body)
   await db.collection("user").doc(id).update(req.body);
 });
 router.post("/admin/update/:id", async (req, res) => {
   const { id } = req.params;
   try {
+    console.log(req.body)
     await db.collection("user").doc(id).update(req.body);
   } catch (error) {
       res.status(404).send({error:error.message})
