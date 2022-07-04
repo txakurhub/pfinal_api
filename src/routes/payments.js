@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
 
   try {
     const result = await createPayment(items);
-    await axios.post(URL, { user_id, email, items });
+    await axios.post(URL/order, { user_id, email, items });
     res.status(200).send(result);
   } catch (error) {
     console.log("Entra aca", error);
@@ -20,7 +20,7 @@ router.get("/success", (req, res) => {
   try {
     res.status(200).send("Se completo el pago con exito");
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.send({ error: error.message });
   }
 });
 

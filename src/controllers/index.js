@@ -38,7 +38,10 @@ const setDataApi = async () => {
     model: e.attributes ? e.attributes[2].value_name : "Not found",
     price: e.price, //parseInt(s.price)
     category: e.category_id,
+    stock: e.available_quantity,
+    sold: e.sold_quantity                                                                                                       
   }));
+  
   //cargo los productos al db y necesita que ya este cargada las categoria para que se cree la relacion
   await Promise.all(
     cargoalDB.map(async (el) => {
@@ -49,12 +52,12 @@ const setDataApi = async () => {
     })
   );
   //console.log("Datos cargados");
-  let dataDb = await Product.findAll({include: { model: Category , attributes:["id","name"],throught:{attributes:[]}}});
+  let dataDb = await Product.findAll({include: { all: true }});
   return dataDb;
 };
 
 const getDbCategories = async () => {
-  const foundCategories = await Category.findAll({include: { model: Product , attributes:[],throught:{attributes:[]}}});
+  const foundCategories = await Category.findAll({include: { all:true}});
   return foundCategories;
 };
 

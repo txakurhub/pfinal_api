@@ -5,6 +5,7 @@ const router = Router();
 router.post("/", async(req, res)=>{
 try {
     const {user_id, product_id} = req.body
+    console.table(req.body)
     if(!user_id || !product_id){
         res.status(404).send("Parameters incompletes")
     }else{
@@ -13,7 +14,8 @@ try {
         });
         const searchProduct = await Product.findByPk(product_id);
         await create.addProduct(searchProduct);
-        res.status(200).send('Wishlist create');
+
+        res.status(200).send(searchProduct);
     }
 } catch (error) {
     console.log(error)
@@ -21,15 +23,13 @@ try {
 })
 router.get("/:id", async(req, res)=>{
     const {id} = req.params
-    const { product_id} = req.body
-    console.log(id)
     const result = await Wishlist.findAll({
         where: {
             userId: id
         },
         include: Product
     })
-    console.log(result)
+    console.log(result, "user search")
     res.status(200).send(result)
 })
 router.delete("/", async(req, res)=>{
@@ -51,7 +51,12 @@ router.delete("/", async(req, res)=>{
         res.status(200).send(result)
     }
     else{
-        res.status(400).send("error id Not Fount")
+        const result = await Wishlist.findAll({
+            where: {
+                userId: id_user
+            },include: Product
+        });
+        res.status(400).send(result)
     }
 
 })
