@@ -12,7 +12,7 @@ const orderRouter = require("./order")
 const usersRouter = require("./users")
 const sendMail = require("./sendMail")
 //--------------------------ROUTES
-
+router.use("/", "qué mirás careta")
 router.use("/shoes", shoesRouter);
 router.use("/categories", categoriesRouter);
 router.use("/customers", usersRouter);
