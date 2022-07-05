@@ -5,6 +5,7 @@ const router = Router();
 // trae todos los customers / customer
 router.get("/", async (req, res) => {
   const { name } = req.query;
+  console.log("aca le llega el name:", name)
   try {
     // se trae los customers con su tabla relacional
     let result = await Customer.findAll({
