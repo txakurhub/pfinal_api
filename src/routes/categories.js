@@ -1,10 +1,8 @@
 const { Router } = require("express");
-const { Category, Product } = require("../db");
+const { Category } = require("../db");
 const router = Router();
 const axios = require("axios");
-const { Op } = require("sequelize");
-const { getDbCategories,getDb } = require("../controllers/index.js");
-const { v4: uuidv4 } = require('uuid');
+const { getDbCategories, getDb } = require("../controllers/index.js");
 
 router.get("/", async (req, res) => {
   try {
@@ -29,22 +27,36 @@ router.get("/", async (req, res) => {
     console.log(err + " - - Catch en categories");
   }
 });
-
-router.get("/:id", async (req, res) => {
-try {
-  const { id } = req.params;
-  const allProducts = await getDb()
-  if (id) {
-   let found = await allProducts.filter((e)=>e.category?e.category==id:e.category.id==id)
-   res.status(200).send(found)
-  }else{
-    res.status(400).send('error')
+//Ruta para usar en admin!!
+router.get("/admin", async (req, res) => {
+  try {
+    const foundCategories = await Category.findAll({ include: { all: true } });
+    const result = JSON.parse(JSON.stringify(foundCategories)).map(e => {
+      const cantidad = e.Products.length
+      return { id: e.id, name: e.name, cantidad }
+    })
+    res.send(result)
+  } catch (error) {
+    res.status(404).send({ error: error.message })
   }
-} catch (error) {
-  console.log(error)
-}
+})
 
-  
+//que es esta ruta DD: ????!!!
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const allProducts = await getDb()
+    if (id) {
+      let found = await allProducts.filter((e) => e.category ? e.category == id : e.category.id == id)
+      res.status(200).send(found)
+    } else {
+      res.status(400).send('error')
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+
 });
 
 router.post('/', async (req, res) => { // Crear nueva categoría
@@ -52,14 +64,13 @@ router.post('/', async (req, res) => { // Crear nueva categoría
   console.log(nameC)
   try {
     if (nameC) {
-      const id = uuidv4()
       const search = await Category.findOne({
         where: {
           name: nameC
         }
       })
       if (!search) {
-        await Category.create({ id: id, name: nameC })
+        await Category.create({ id: `MLA${Math.round(Math.random() * 1000000)}`, name: nameC })
         res.send("Category created")
       } else {
         res.status(404).send("The category already exists")
@@ -89,6 +100,19 @@ router.put('/:id', async (req, res) => { // Ruta para cambiar el nombre de una c
   }
 })
 
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    // elimino el producto
+    const removed = await Customer.destroy({ where: { id } });
+    // si lo de arriba retorna 1 (Es porque lo elimino)
+    if (removed) return res.send("Removed customer");
+    // si lo de arriba retorna 0 (Es porque no lo elimino)
+    res.send("ID not found");
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
 
 
 module.exports = router;
