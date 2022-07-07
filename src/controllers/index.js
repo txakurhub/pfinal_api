@@ -35,7 +35,7 @@ const setDataApi = async () => {
     title: e.title,
     image: e.thumbnail,
     brand: e.attributes ? e.attributes[0].value_name : "Not found",
-    model: e.attributes ? e.attributes[2].value_name : "Not found",
+    model: e.attributes && e.attributes.length === 3 ? e.attributes[2].value_name : "Not found",
     price: e.price, //parseInt(s.price)
     category: e.category_id,
     stock: e.available_quantity,

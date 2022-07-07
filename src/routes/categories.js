@@ -100,5 +100,17 @@ router.put('/:id', async (req, res) => { // Ruta para cambiar el nombre de una c
   }
 })
 
+router.delete("/:id",async(req,res)=>{
+  const {id} = req.params
+  try {
+    const found = await Category.findByPk(id)
+    if(!found) return res.status(404).send("Not found")
+    const removed = await Category.destroy({where:{id:id}})
+    if (removed) return res.send("Category deleted")
+    else return res.send("Unexpected error")
+  } catch (error) {
+    res.status(404).send({error:error.message})
+  }
+})
 
 module.exports = router;
