@@ -40,8 +40,12 @@ router.get("/:id", async (req, res) => {
 
 router.get("/pictures/:id", async (req, res) => {
   const { id } = req.params;
-  const pictures = await axios.get("https://api.mercadolibre.com/items/" + id);
-  res.send(pictures.data.pictures.map(r => r.url));
+  try {
+    const pictures = await axios.get("https://api.mercadolibre.com/items/" + id);
+    pictures.length ? res.send(pictures.data.pictures.map(r => r.url)) : null;
+  } catch (error) {
+    console.log(error)
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -59,14 +63,14 @@ router.post("/", async (req, res) => {
         model,
         price,
       });
-      const searchCategory = await Category.findAll({
+      const searchCategory = await Category.findOne({
         where: {
-          name: category,
+          id: category,
         },
       });
 
       await create.addCategory(searchCategory);
-
+      
       res.status(200).send("Product created");
     }
   } catch (error) {
