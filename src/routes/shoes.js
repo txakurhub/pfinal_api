@@ -62,6 +62,7 @@ router.post("/", async (req, res) => {
         brand,
         model,
         price,
+        category,
       });
       const searchCategory = await Category.findOne({
         where: {
