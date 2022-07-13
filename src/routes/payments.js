@@ -6,8 +6,8 @@ router.post("/", async (req, res) => {
   const { items, email, user_id } = req.body;
 
   try {
-    const result = await createPayment(items);
-    await axios.post("http://localhost:3001/order", { user_id, email, items });
+    const orden = (await axios.post("http://localhost:3001/order", { user_id, email, items })).data;
+    const result = await createPayment(items, orden.id);
     res.send(result);
   } catch (error) {
     console.log("Entra aca", error);
@@ -15,39 +15,51 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/success", (req, res) => {
+router.get("/success/:id", async (req, res) => {
+
+  const {id} = req.params;
+
   try {
-    res.send("Se completo el pago con exito");
+    await axios.put("http://localhost:3001/order/"+id, {order: "realizada"})
+    res.redirect("http://localhost:3000/");
   } catch (error) {
     res.send({ error: error.message });
   }
 });
 
-router.get("/failure", (req, res) => {
+router.get("/failure/:id", async(req, res) => {
+
+  const {id} = req.params;
+
   try {
-    res.send("No se pudo completar el pago");
+    await axios.put("http://localhost:3001/order/"+id, {order: "cancelada"})
+    res.redirect("http://localhost:3000/");
   } catch (error) {
     res.send({ error: error.message });
   }
 });
 
-router.get("/pending", (req, res) => {
+router.get("/pending/:id", async (req, res) => {
+
+  const {id} = req.params;
+
   try {
-    res.send("El pago esta pendiente");
+    await axios.put("http://localhost:3001/order/"+id, {order: "pendiente"})
+    res.redirect("http://localhost:3000/");
   } catch (error) {
     res.send({ error: error.message });
   }
 });
 
-async function createPayment(item) {
+async function createPayment(item, id) {
   const url = "https://api.mercadopago.com/checkout/preferences";
   const body = {
     items: item,
     back_urls: {
-      failure: "/failure",
-      pending: "/pending",
-      success: "/success",
-    },
+      failure: "http://localhost:3001/payments/failure/"+id,
+      pending: "http://localhost:3001/payments/pending/"+id,
+      success: "http://localhost:3001/payments/success/"+id,
+    }
   };
   const payment = await axios.post(url, body, {
     headers: {
@@ -57,13 +69,14 @@ async function createPayment(item) {
   });
 ////ACCES_TOKEN = APP_USR-7186342339590293-051403-1dd7693603cbe79be81d357b18b1a2cc-185162521
 
-    const result2 = [
+    const result = [
       payment.data.init_point,
+      payment.data.id,
       payment.data.items.map((e) => {
       return e;
       }),
     ];
-    console.log("Es result ", result);
+    console.log("Esto es payments ", payment);
     return result;
 }
 
