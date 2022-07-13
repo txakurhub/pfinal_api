@@ -100,19 +100,17 @@ router.put('/:id', async (req, res) => { // Ruta para cambiar el nombre de una c
   }
 })
 
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
+router.delete("/:id",async(req,res)=>{
+  const {id} = req.params
   try {
-    // elimino el producto
-    const removed = await Customer.destroy({ where: { id } });
-    // si lo de arriba retorna 1 (Es porque lo elimino)
-    if (removed) return res.send("Removed customer");
-    // si lo de arriba retorna 0 (Es porque no lo elimino)
-    res.send("ID not found");
+    const found = await Category.findByPk(id)
+    if(!found) return res.status(404).send("Not found")
+    const removed = await Category.destroy({where:{id:id}})
+    if (removed) return res.send("Category deleted")
+    else return res.send("Unexpected error")
   } catch (error) {
-    res.json({ error: error.message });
+    res.status(404).send({error:error.message})
   }
-});
-
+})
 
 module.exports = router;
