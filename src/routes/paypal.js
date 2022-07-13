@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
             order_address: "", // direccion de pedido
             order_email: email,
             order_date: date,
-            order_status: "Completada"
+            order_status: "realizada"
         };
         const newOrder = await Order.create(obj);
         newOrder.addCustomer(found);
