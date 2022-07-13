@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
     console.log("Entra aca", error);
     res.status(404).send({ error: error.message });
   }
-});
+}); 
 
 router.get("/success/:id", async (req, res) => {
 
