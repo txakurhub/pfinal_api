@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const router = Router();
+
 //--------------------------IMPORT
 const shoesRouter = require("./shoes");
 const customersRouter = require("./customer");
@@ -15,7 +16,7 @@ const paypal = require("./paypal");
 //--------------------------ROUTES
 router.use("/shoes", shoesRouter);
 router.use("/categories", categoriesRouter);
-router.use("/customers", customersRouter);
+router.use("/customers", usersRouter);
 router.use("/reviews", reviewsRouter);
 router.use("/payments", paymentsRouter);
 router.use("/wishlist", wishlistRouter);
