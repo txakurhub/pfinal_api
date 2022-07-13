@@ -78,13 +78,13 @@ router.post('/', async (req, res) => { // Crear nueva categoría
     }
   } catch (error) {
     console.log(error)
+    res.status(404).send(error.message)
   }
 })
 
 router.put('/:id', async (req, res) => { // Ruta para cambiar el nombre de una categoría
   const { nameCategory } = req.body
   const { id } = req.params
-  console.log(`categoria: ${nameCategory} || id: ${id}`)
   try {
     if (nameCategory) {
       const searchDb = await Category.findByPk(id)
