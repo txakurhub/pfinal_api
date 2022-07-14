@@ -3,7 +3,7 @@ const router = Router();
 const axios = require("axios");
 const { PRODUCTION, CORS_URL } = process.env;
 const LOCAL_BACK = "http://localhost:3001";
-const URL_DEPLOY = "https://zapatillasplanb.herokuapp.com/";
+const URL_DEPLOY = "https://zapatillasplanb.herokuapp.com";
 
 router.post("/", async (req, res) => {
   const { items, email, user_id } = req.body;
