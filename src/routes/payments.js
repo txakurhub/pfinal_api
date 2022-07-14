@@ -63,7 +63,7 @@ async function createPayment(item, id) {
       failure: `${URL_DEPLOY}/payments/failure/${id}`,
       pending: `${URL_DEPLOY}/payments/pending/${id}`,
       success: `${URL_DEPLOY}/payments/success/${id}`,
-    }
+    }, auto_return:"approved"
   };
   const payment = await axios.post(url, body, {
     headers: {
