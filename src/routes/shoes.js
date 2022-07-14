@@ -42,7 +42,7 @@ router.get("/pictures/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const pictures = await axios.get("https://api.mercadolibre.com/items/" + id);
-    pictures.length ? res.send(pictures.data.pictures.map(r => r.url)) : null;
+    pictures ? res.send(pictures.data.pictures.map(r => r.url)) : null;
   } catch (error) {
     console.log(error)
   }

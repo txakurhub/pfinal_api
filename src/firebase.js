@@ -5,7 +5,7 @@ const { getFirestore } = require("firebase-admin/firestore");
 
 initializeApp({
   credential: applicationDefault(),
-  databaseURL: 'https://console.firebase.google.com/u/0/project/zapas-56035/firestore/data/~2Fusers~2F0NRNKILSPHhlb4YV3SSCKouDVN52'
+  databaseURL: 'https://console.firebase.google.com/project/zapasemergencia/firestore/data/~2Fuser~2FxG6ihEVhxrWyOOuoiEJ2'
 });
 const admin = require("firebase-admin");
 const app = !admin.apps.length ? admin.initializeApp() : admin.app();
