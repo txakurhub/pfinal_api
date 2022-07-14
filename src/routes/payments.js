@@ -3,14 +3,14 @@ const router = Router();
 const axios = require("axios");
 const { PRODUCTION, CORS_URL } = process.env;
 const LOCAL_BACK = "http://localhost:3001";
-const URL_DEPLOY = "https://zapatillas-proyecto.herokuapp.com";
+const URL_DEPLOY = "https://zapatillasplanb.herokuapp.com/";
 
 router.post("/", async (req, res) => {
   const { items, email, user_id } = req.body;
 
   try {
     console.log(PRODUCTION)
-    const orden = (await axios.post(`${PRODUCTION ? LOCAL_BACK : URL_DEPLOY}/order`, { user_id, email, items })).data;
+    const orden = (await axios.post(`${URL_DEPLOY}/order`, { user_id, email, items })).data;
     const result = await createPayment(items, orden.id);
     res.send(result);
   } catch (error) {
@@ -37,7 +37,7 @@ router.get("/failure/:id", async(req, res) => {
 
   try {
     await axios.put(`${PRODUCTION ? LOCAL_BACK : URL_DEPLOY}/order/${id}`, {order: "cancelada"})
-    res.redirect(PRODUCTION ? "http://localhost:3000/" : CORS_URL);
+    res.redirect(CORS_URL);
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -49,7 +49,7 @@ router.get("/pending/:id", async (req, res) => {
 
   try {
     await axios.put(`${PRODUCTION ? LOCAL_BACK : URL_DEPLOY}/order/${id}`, {order: "pendiente"})
-    res.redirect(PRODUCTION ? "http://localhost:3000/" : CORS_URL);
+    res.redirect(CORS_URL);
   } catch (error) {
     res.send({ error: error.message });
   }
@@ -60,9 +60,9 @@ async function createPayment(item, id) {
   const body = {
     items: item,
     back_urls: {
-      failure: `${PRODUCTION ? LOCAL_BACK : URL_DEPLOY}/payments/failure/${id}`,
-      pending: `${PRODUCTION ? LOCAL_BACK : URL_DEPLOY}/payments/pending/${id}`,
-      success: `${PRODUCTION ? LOCAL_BACK : URL_DEPLOY}/payments/success/${id}`,
+      failure: `${URL_DEPLOY}/payments/failure/${id}`,
+      pending: `${URL_DEPLOY}/payments/pending/${id}`,
+      success: `${URL_DEPLOY}/payments/success/${id}`,
     }
   };
   const payment = await axios.post(url, body, {
